@@ -7,12 +7,28 @@
   "minutos": 18,
   "lead": "Uma ferramenta só está pronta quando um teste prova que ela funciona e que a página continua igual sem ela. A bateria do kit roda sem modelo nos três modos, compara ferramenta com formulário, testa a confirmação e a remoção. Nesta aula você a roda, vê uma quebra ser pega e sai com o plano datado do seu site.",
   "objetivo": "rodar a bateria automática nos três modos, ver uma quebra ser pega e sair com o checklist e o plano datado da sua página.",
-  "competencias": ["rodar-bateria-automatica", "provocar-e-pegar-regressao", "planejar-a-adocao"],
+  "competencias": [
+    "rodar-bateria-automatica",
+    "provocar-e-pegar-regressao",
+    "planejar-a-adocao"
+  ],
   "aprende": [
-    { "icone": "check", "t": "O que a bateria confere em cada modo" },
-    { "icone": "x", "t": "Uma \"otimização\" perigosa e o teste que pega" },
-    { "icone": "lista", "t": "O checklist antes de publicar" },
-    { "icone": "calendario", "t": "O plano datado do seu site" }
+    {
+      "icone": "check",
+      "t": "O que a bateria confere em cada modo"
+    },
+    {
+      "icone": "x",
+      "t": "Uma \"otimização\" perigosa e o teste que pega"
+    },
+    {
+      "icone": "lista",
+      "t": "O checklist antes de publicar"
+    },
+    {
+      "icone": "calendario",
+      "t": "O plano datado do seu site"
+    }
   ],
   "hero_alt": "Bancada escura com notebook rodando um terminal e um robô humanoide industrial de visor preto observando um segundo monitor com navegador.",
   "secoes": [
@@ -21,12 +37,48 @@
       "titulo": "O mapa do curso",
       "sub": "Quatro degraus e o que cada um entrega. Clique num exercício para ver o \"pronto quando\".",
       "degraus": [
-        { "aula": "ambiente", "icone": "terminal", "quando": "Dia 1", "titulo": "Kit e modos", "sub": "sem, polyfill, nativo", "saida": "A mesma página nos três modos, sem custo.", "passo": "A base: kit instalado, contexto seguro e a certeza de que o modo Sem funciona." },
-        { "aula": "primeira", "icone": "caneta", "quando": "Dia 1", "titulo": "Ferramentas", "sub": "registrar e chamar", "saida": "Uma ferramenta sua, chamada por executeTool.", "passo": "Requer o degrau 1. Definição, registro com detecção e o resultado em texto JSON." },
-        { "aula": "anotacoes", "icone": "portao", "quando": "Dia 2", "titulo": "Confirmação", "sub": "anotações e portão", "saida": "Toda ação com efeito atrás do Confirmar.", "passo": "Requer o degrau 2. Anotações certas, texto de terceiros como dado e a pessoa decidindo." },
-        { "aula": "testar", "icone": "check", "quando": "Dia 3", "titulo": "Bateria", "sub": "três modos", "saida": "Teste automático que pega quebra antes do visitante.", "passo": "Requer os três. A bateria verde, uma quebra provocada e o plano do seu site." }
+        {
+          "aula": "ambiente",
+          "icone": "terminal",
+          "quando": "Dia 1",
+          "titulo": "Kit e modos",
+          "sub": "sem, polyfill, nativo",
+          "saida": "A mesma página nos três modos, sem custo.",
+          "passo": "A base: kit instalado, contexto seguro e a certeza de que o modo Sem funciona."
+        },
+        {
+          "aula": "primeira",
+          "icone": "caneta",
+          "quando": "Dia 1",
+          "titulo": "Ferramentas",
+          "sub": "registrar e chamar",
+          "saida": "Uma ferramenta sua, chamada por executeTool.",
+          "passo": "Requer o degrau 1. Definição, registro com detecção e o resultado em texto JSON."
+        },
+        {
+          "aula": "anotacoes",
+          "icone": "portao",
+          "quando": "Dia 2",
+          "titulo": "Confirmação",
+          "sub": "anotações e portão",
+          "saida": "Toda ação com efeito atrás do Confirmar.",
+          "passo": "Requer o degrau 2. Anotações certas, texto de terceiros como dado e a pessoa decidindo."
+        },
+        {
+          "aula": "testar",
+          "icone": "check",
+          "quando": "Dia 3",
+          "titulo": "Bateria",
+          "sub": "três modos",
+          "saida": "Teste automático que pega quebra antes do visitante.",
+          "passo": "Requer os três. A bateria verde, uma quebra provocada e o plano do seu site."
+        }
       ],
-      "resultado": { "titulo": "Ao final do curso", "texto": "Página com ferramentas WebMCP, igual sem a API, com confirmação e bateria automática.", "total": "22 exercícios" },
+      "resultado": {
+        "titulo": "Ao final do curso",
+        "texto": "Página com ferramentas WebMCP, igual sem a API, com confirmação e bateria automática.",
+        "total": "22 exercícios"
+      },
       "legenda": "Ciclo de vida, formulário e catálogo (aulas 4, 6 e 7) entram no gerador abaixo."
     },
     {
@@ -34,13 +86,23 @@
       "titulo": "A bateria completa",
       "sub": "Primeiro os testes de regra (node --test, sem navegador), depois testar.mjs nos três modos. Nenhuma chamada de modelo.",
       "blocos": [
-        { "rot": "Terminal · bateria", "icone": "terminal", "conteudo": "@@bloco:a8a-testar@@" }
+        {
+          "rot": "Terminal · bateria",
+          "icone": "terminal",
+          "conteudo": "cd ~/projetos/formacao-webmcp-site-v72/kit\nnode --test 2>&1 | grep -E \"^ℹ (pass|fail)\"\nnode scripts/testar.mjs; echo \"saída: $?\""
+        }
       ],
       "saida": {
         "selo": "real",
         "abas": [
-          { "rot": "Saída capturada (19/10/2026)", "html": "@@saida:a8a-testar@@<p>No polyfill, getTools depois do pagehide dá NotAllowedError: ele desliga a API inteira. O teste aceita os dois jeitos de \"sair\": zero ferramentas e toolchange disparado.</p>" },
-          { "rot": "Erro comum: reservar sem esperar", "html": "@@saida:a8b-quebra@@<p>Alguém troca a espera pelo clique por <code>const ok = true</code> para \"agilizar\". A bateria falha em \"reserva recusada na tela não reserva\" e sai com 1. É para isso que ela existe.</p>" }
+          {
+            "rot": "Saída capturada (19/10/2026)",
+            "html": "<pre>ℹ pass 4\nℹ fail 0\n== sem\n   Chromium 156.0.8078.4 (Playwright)\nok    [sem] página sem erro de JavaScript\nok    [sem] sem rolagem horizontal em 390 px\nok    [sem] estado WebMCP esperado (sem) · sem\nok    [sem] busca pelo formulário funciona · of-301\nok    [sem] reserva pelo formulário funciona\n== polyfill\nok    [polyfill] página sem erro de JavaScript\nok    [polyfill] sem rolagem horizontal em 390 px\nok    [polyfill] estado WebMCP esperado (com) · com\nok    [polyfill] busca pelo formulário funciona · of-301\nok    [polyfill] reserva pelo formulário funciona\nok    [polyfill] as 4 ferramentas do kit registradas · buscar_oficinas, listar_comentarios, minhas_reservas, reservar_vaga\nok    [polyfill] ferramenta devolve o mesmo que o formulário · of-301\nok    [polyfill] a tela mostra o que o agente recebeu · of-301\nok    [polyfill] reserva recusada na tela não reserva\nok    [polyfill] reserva confirmada aparece na tela\nok    [polyfill] entrada inválida volta erro legível, sem mudar nada · tema inválido: cobol\nok    [polyfill] ao sair da página as ferramentas saem (AbortSignal) · 0 restantes, toolchange 4x, getTools depois: NotAllowedError\nok    [polyfill] nenhum erro de JavaScript na sessão do agente\n== nativo\nok    [nativo] página sem erro de JavaScript\nok    [nativo] sem rolagem horizontal em 390 px\nok    [nativo] estado WebMCP esperado (com) · com\nok    [nativo] busca pelo formulário funciona · of-301\nok    [nativo] reserva pelo formulário funciona\nok    [nativo] as 4 ferramentas do kit registradas · buscar_oficinas, listar_comentarios, minhas_reservas, reservar_vaga\nok    [nativo] ferramenta devolve o mesmo que o formulário · of-301\nok    [nativo] a tela mostra o que o agente recebeu · of-301\nok    [nativo] reserva recusada na tela não reserva\nok    [nativo] reserva confirmada aparece na tela\nok    [nativo] entrada inválida volta erro legível, sem mudar nada · tema inválido: cobol\nok    [nativo] ao sair da página as ferramentas saem (AbortSignal) · 0 restantes, toolchange 4x\nok    [nativo] nenhum erro de JavaScript na sessão do agente\nBATERIA: 31/31 ok\nsaída: 0</pre><p>No polyfill, getTools depois do pagehide dá NotAllowedError: ele desliga a API inteira. O teste aceita os dois jeitos de \"sair\": zero ferramentas e toolchange disparado.</p>"
+          },
+          {
+            "rot": "Erro comum: reservar sem esperar",
+            "html": "<pre>FALHA [nativo] reserva recusada na tela não reserva\nBATERIA: 12/13 ok\nsaída: 1</pre><p>Alguém troca a espera pelo clique por <code>const ok = true</code> para \"agilizar\". A bateria falha em \"reserva recusada na tela não reserva\" e sai com 1. É para isso que ela existe.</p>"
+          }
         ]
       }
     },
@@ -49,7 +111,11 @@
       "titulo": "Provocar a quebra",
       "sub": "O ensaio copia a página, faz a troca perigosa na cópia e roda a bateria só no modo nativo.",
       "blocos": [
-        { "rot": "Terminal · quebra provocada", "icone": "x", "conteudo": "@@bloco:a8b-quebra@@" }
+        {
+          "rot": "Terminal · quebra provocada",
+          "icone": "x",
+          "conteudo": "cd ~/projetos/formacao-webmcp-site-v72/kit\nE=${TMPDIR:-/tmp}/ensaio-webmcp-site/a8; rm -rf $E; mkdir -p $E; cp -r pagina/. $E/\n# a \"otimização\" perigosa: reservar sem esperar a pessoa\nsed -i 's/const ok = await ui.pedirConfirmacao({ oficina, nome }, signal);/const ok = true;/' $E/ferramentas.mjs\nPAGINA=$E node scripts/testar.mjs nativo | grep -E \"FALHA|BATERIA\"; echo \"saída: ${PIPESTATUS[0]}\""
+        }
       ]
     },
     {
@@ -57,10 +123,42 @@
       "titulo": "Checklist antes de publicar",
       "sub": "Datado: 19/10/2026, spec de 16/10/2026.",
       "passos": [
-        { "titulo": "Fallback", "sub": "modo Sem", "texto": ["O site funciona igual sem document.modelContext.", "Nada de polyfill em produção: ele é só para o ensaio."] },
-        { "titulo": "Catálogo", "sub": "validador", "texto": ["validar-catalogo.mjs com 0 erros.", "Cada ferramenta com uma intenção e a anotação certa."] },
-        { "titulo": "Efeito", "sub": "confirmação", "texto": ["Toda ferramenta com consequentialHint espera a pessoa.", "Bateria com o caso \"recusar\" passando."] },
-        { "titulo": "Data", "sub": "spec e trial", "texto": ["Comentário com a data da spec no arquivo das ferramentas.", "Token do origin trial com a data de fim (Chrome 156) na agenda."], "exemplo": { "rot": "Lembrete", "texto": "Quando a spec mudar de data, rode a bateria e releia o que mudou." } }
+        {
+          "titulo": "Fallback",
+          "sub": "modo Sem",
+          "texto": [
+            "O site funciona igual sem document.modelContext.",
+            "Nada de polyfill em produção: ele é só para o ensaio."
+          ]
+        },
+        {
+          "titulo": "Catálogo",
+          "sub": "validador",
+          "texto": [
+            "validar-catalogo.mjs com 0 erros.",
+            "Cada ferramenta com uma intenção e a anotação certa."
+          ]
+        },
+        {
+          "titulo": "Efeito",
+          "sub": "confirmação",
+          "texto": [
+            "Toda ferramenta com consequentialHint espera a pessoa.",
+            "Bateria com o caso \"recusar\" passando."
+          ]
+        },
+        {
+          "titulo": "Data",
+          "sub": "spec e trial",
+          "texto": [
+            "Comentário com a data da spec no arquivo das ferramentas.",
+            "Token do origin trial com a data de fim (Chrome 156) na agenda."
+          ],
+          "exemplo": {
+            "rot": "Lembrete",
+            "texto": "Quando a spec mudar de data, rode a bateria e releia o que mudou."
+          }
+        }
       ]
     },
     {
@@ -68,9 +166,27 @@
       "titulo": "Prática",
       "sub": "A bateria verde, a quebra pega e o seu plano.",
       "exercicios": [
-        { "id": "e1", "titulo": "E1 · Bateria verde", "min": "5 min", "texto": "Rode a bateria completa.", "pronto": "<code>node scripts/testar.mjs; echo \"saída: $?\"</code> → <code>BATERIA: 31/31 ok</code> e <code>saída: 0</code>." },
-        { "id": "e2", "titulo": "E2 · Pegar a quebra", "min": "5 min", "texto": "Rode o ensaio da quebra provocada e leia a linha que falhou.", "pronto": "O bloco imprime <code>FALHA [nativo] reserva recusada na tela não reserva</code>, <code>BATERIA: 12/13 ok</code> e <code>saída: 1</code>." },
-        { "id": "e3", "titulo": "E3 · Plano datado", "min": "10 min", "texto": "Gere o plano abaixo com a data de início e as horas que você tem. Escreva nele as 3 ferramentas do seu catálogo (aula 7) e a data em que vai rodar a bateria de novo.", "pronto": "Você baixou o plano (.md ou .ics) e ele tem a data de reteste da bateria." }
+        {
+          "id": "e1",
+          "titulo": "E1 · Bateria verde",
+          "min": "5 min",
+          "texto": "Rode a bateria completa.",
+          "pronto": "<code>node scripts/testar.mjs; echo \"saída: $?\"</code> → <code>BATERIA: 31/31 ok</code> e <code>saída: 0</code>."
+        },
+        {
+          "id": "e2",
+          "titulo": "E2 · Pegar a quebra",
+          "min": "5 min",
+          "texto": "Rode o ensaio da quebra provocada e leia a linha que falhou.",
+          "pronto": "O bloco imprime <code>FALHA [nativo] reserva recusada na tela não reserva</code>, <code>BATERIA: 12/13 ok</code> e <code>saída: 1</code>."
+        },
+        {
+          "id": "e3",
+          "titulo": "E3 · Plano datado",
+          "min": "10 min",
+          "texto": "Gere o plano abaixo com a data de início e as horas que você tem. Escreva nele as 3 ferramentas do seu catálogo (aula 7) e a data em que vai rodar a bateria de novo.",
+          "pronto": "Você baixou o plano (.md ou .ics) e ele tem a data de reteste da bateria."
+        }
       ]
     },
     {
@@ -80,46 +196,154 @@
       "curso": "WebMCP no seu site",
       "horas_padrao": 4,
       "degraus": [
-        { "titulo": "Aula 1 · WebMCP hoje", "aula": "hoje" },
-        { "titulo": "Aula 2 · Ambiente e três modos", "aula": "ambiente" },
-        { "titulo": "Aula 3 · Primeira ferramenta", "aula": "primeira" },
-        { "titulo": "Aula 4 · Ciclo de vida", "aula": "ciclo" },
-        { "titulo": "Aula 5 · Anotações e confirmação", "aula": "anotacoes" },
-        { "titulo": "Aula 6 · Formulário como ferramenta", "aula": "formulario" },
-        { "titulo": "Aula 7 · Catálogo e migração", "aula": "catalogo" },
-        { "titulo": "Aula 8 · Bateria e plano", "aula": "testar" }
+        {
+          "titulo": "Aula 1 · WebMCP hoje",
+          "aula": "hoje"
+        },
+        {
+          "titulo": "Aula 2 · Ambiente e três modos",
+          "aula": "ambiente"
+        },
+        {
+          "titulo": "Aula 3 · Primeira ferramenta",
+          "aula": "primeira"
+        },
+        {
+          "titulo": "Aula 4 · Ciclo de vida",
+          "aula": "ciclo"
+        },
+        {
+          "titulo": "Aula 5 · Anotações e confirmação",
+          "aula": "anotacoes"
+        },
+        {
+          "titulo": "Aula 6 · Formulário como ferramenta",
+          "aula": "formulario"
+        },
+        {
+          "titulo": "Aula 7 · Catálogo e migração",
+          "aula": "catalogo"
+        },
+        {
+          "titulo": "Aula 8 · Bateria e plano",
+          "aula": "testar"
+        }
       ],
-      "txt": { "titulo": "Plano — WebMCP no seu site", "inicio": "Início", "ritmo": "Ritmo", "termino": "Término previsto", "ate": "até", "pronto": "pronto quando", "semanas": "semanas", "travou": "## O que travou e a regra que criei", "h": "h por semana", "exs": "exercícios" }
+      "txt": {
+        "titulo": "Plano — WebMCP no seu site",
+        "inicio": "Início",
+        "ritmo": "Ritmo",
+        "termino": "Término previsto",
+        "ate": "até",
+        "pronto": "pronto quando",
+        "semanas": "semanas",
+        "travou": "## O que travou e a regra que criei",
+        "h": "h por semana",
+        "exs": "exercícios"
+      }
     },
     {
       "tipo": "quiz",
       "titulo": "Teste da aula",
       "sub": "A explicação aparece depois da resposta.",
       "perguntas": [
-        { "p": "Qual verificação pega a troca da confirmação por const ok = true?", "opcoes": ["As 4 ferramentas do kit registradas.", "A tela mostra o que o agente recebeu.", "Sem rolagem horizontal em 390 px.", "Reserva recusada na tela não reserva."], "certa": 3, "explica": "Sem a espera, a reserva acontece mesmo quando a pessoa recusa. As outras verificações continuam verdes: por isso o caso \"recusar\" tem de existir.", "ref": "codigo" },
-        { "p": "Por que a bateria compara a ferramenta com o formulário?", "opcoes": ["Para medir qual dos dois é mais rápido.", "Para o agente aprender com o formulário.", "Para provar que os dois caminhos dão o mesmo resultado.", "Porque o polyfill só funciona com formulário."], "certa": 2, "explica": "Agente e pessoa usam a mesma regra. Se divergirem, uma das duas está errada, e o visitante sem a API vê outra coisa.", "ref": "codigo" },
-        { "p": "Onde o polyfill entra no site publicado?", "opcoes": ["No head de toda página, antes do app.", "Em lugar nenhum: é só para o ensaio.", "Só nas páginas com formulário declarativo.", "Só para quem usa Safari ou Firefox."], "certa": 1, "explica": "Polyfill é ensaio, não oficial e temporário. Em produção, quem tem a API (trial ou flag) usa a nativa; o resto usa o formulário.", "ref": "passos" },
-        { "p": "A spec ganhou uma data nova. Primeiro passo?", "opcoes": ["Rodar a bateria e ler o que mudou na spec.", "Remover as ferramentas até o Chrome estabilizar.", "Trocar document por navigator nos exemplos.", "Esperar o fim do origin trial no Chrome 156."], "certa": 0, "explica": "Bateria primeiro, depois leitura do que mudou: é o mesmo caminho que trocou navigator por document em maio. Nunca volte ao nome antigo.", "ref": "passos" }
+        {
+          "p": "Qual verificação pega a troca da confirmação por const ok = true?",
+          "opcoes": [
+            "As 4 ferramentas do kit registradas.",
+            "A tela mostra o que o agente recebeu.",
+            "Sem rolagem horizontal em 390 px.",
+            "Reserva recusada na tela não reserva."
+          ],
+          "certa": 3,
+          "explica": "Sem a espera, a reserva acontece mesmo quando a pessoa recusa. As outras verificações continuam verdes: por isso o caso \"recusar\" tem de existir.",
+          "ref": "codigo"
+        },
+        {
+          "p": "Por que a bateria compara a ferramenta com o formulário?",
+          "opcoes": [
+            "Para medir qual dos dois é mais rápido.",
+            "Para o agente aprender com o formulário.",
+            "Para provar que os dois caminhos dão o mesmo resultado.",
+            "Porque o polyfill só funciona com formulário."
+          ],
+          "certa": 2,
+          "explica": "Agente e pessoa usam a mesma regra. Se divergirem, uma das duas está errada, e o visitante sem a API vê outra coisa.",
+          "ref": "codigo"
+        },
+        {
+          "p": "Onde o polyfill entra no site publicado?",
+          "opcoes": [
+            "No head de toda página, antes do app.",
+            "Em lugar nenhum: é só para o ensaio.",
+            "Só nas páginas com formulário declarativo.",
+            "Só para quem usa Safari ou Firefox."
+          ],
+          "certa": 1,
+          "explica": "Polyfill é ensaio, não oficial e temporário. Em produção, quem tem a API (trial ou flag) usa a nativa; o resto usa o formulário.",
+          "ref": "passos"
+        },
+        {
+          "p": "A spec ganhou uma data nova. Primeiro passo?",
+          "opcoes": [
+            "Rodar a bateria e ler o que mudou na spec.",
+            "Remover as ferramentas até o Chrome estabilizar.",
+            "Trocar document por navigator nos exemplos.",
+            "Esperar o fim do origin trial no Chrome 156."
+          ],
+          "certa": 0,
+          "explica": "Bateria primeiro, depois leitura do que mudou: é o mesmo caminho que trocou navigator por document em maio. Nunca volte ao nome antigo.",
+          "ref": "passos"
+        }
       ]
     },
     {
       "tipo": "resumo",
       "titulo": "Em três frases",
       "itens": [
-        { "t": "Bateria", "texto": "Três modos, ferramenta igual ao formulário, confirmação, entrada inválida e remoção." },
-        { "t": "Quebra", "texto": "O caso \"recusar\" pega quem tira a confirmação para agilizar." },
-        { "t": "Plano", "texto": "Checklist datado e reteste marcado para quando a spec mudar." }
+        {
+          "t": "Bateria",
+          "texto": "Três modos, ferramenta igual ao formulário, confirmação, entrada inválida e remoção."
+        },
+        {
+          "t": "Quebra",
+          "texto": "O caso \"recusar\" pega quem tira a confirmação para agilizar."
+        },
+        {
+          "t": "Plano",
+          "texto": "Checklist datado e reteste marcado para quando a spec mudar."
+        }
       ]
     },
     {
       "tipo": "links",
       "titulo": "Para ir além",
       "links": [
-        { "t": "Próximo curso: agentes de navegador, testar o site como o agente vê", "href": "https://inematds.github.io/formacao-webmcp-navegador-v72/", "icone": "robo" },
-        { "t": "Curso 4: segurança e confiança entre site e agente", "href": "https://inematds.github.io/formacao-webmcp-seguranca-v72/", "icone": "cadeado" },
-        { "t": "Evals e verificação a fundo (Formação LOOP-R Engenharia)", "href": "https://inematds.github.io/loop-r-eng-verificacao-v72/", "icone": "check" },
-        { "t": "Diagnóstico de fora: WebMCP Readiness", "href": "https://webmcp.inema.pro/", "icone": "lupa" },
-        { "t": "Área WebMCP no Eventos", "href": "https://eventos.inema.pro/webmcp/", "icone": "camadas" }
+        {
+          "t": "Próximo curso: agentes de navegador, testar o site como o agente vê",
+          "href": "https://inematds.github.io/formacao-webmcp-navegador-v72/",
+          "icone": "robo"
+        },
+        {
+          "t": "Curso 4: segurança e confiança entre site e agente",
+          "href": "https://inematds.github.io/formacao-webmcp-seguranca-v72/",
+          "icone": "cadeado"
+        },
+        {
+          "t": "Evals e verificação a fundo (Formação LOOP-R Engenharia)",
+          "href": "https://inematds.github.io/loop-r-eng-verificacao-v72/",
+          "icone": "check"
+        },
+        {
+          "t": "Diagnóstico de fora: WebMCP Readiness",
+          "href": "https://webmcp.inema.pro/",
+          "icone": "lupa"
+        },
+        {
+          "t": "Área WebMCP no Eventos",
+          "href": "https://eventos.inema.pro/webmcp/",
+          "icone": "camadas"
+        }
       ]
     }
   ]
