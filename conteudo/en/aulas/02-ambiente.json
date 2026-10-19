@@ -154,7 +154,7 @@
           "sub": "origin trial",
           "texto": [
             "Register your domain in the WebMCP origin trial and paste the token into the meta tag at the top of kit/pagina/index.html.",
-            "The token is valid for the domain, not for localhost on just any machine."
+            "The token is registered for the site's domain; on localhost, use the flag."
           ]
         }
       ]

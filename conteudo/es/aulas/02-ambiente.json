@@ -154,7 +154,7 @@
           "sub": "origin trial",
           "texto": [
             "Registra tu dominio en el origin trial de WebMCP y pega el token en la meta tag de la parte superior de kit/pagina/index.html.",
-            "El token vale para el dominio, no para localhost de cualquier máquina."
+            "El token se registra para el dominio del sitio; en localhost, usa la flag."
           ]
         }
       ]

@@ -998,5 +998,9 @@
  "Nenhuma, porque avaliação de cliente já é conteúdo público do site.": "Ninguna, porque la reseña de un cliente ya es contenido público del sitio.",
  "Sem rolagem horizontal em 390 px, no celular e no modo nativo.": "Sin desplazamiento horizontal en 390 px, en el celular y en el modo nativo.",
  "Para o agente aprender com o formulário e repetir o caminho da pessoa.": "Para que el agente aprenda del formulario y repita el camino de la persona.",
- "Remover todas as ferramentas da página até o Chrome lançar a versão estável.": "Quitar todas las herramientas de la página hasta que Chrome lance la versión estable."
+ "Remover todas as ferramentas da página até o Chrome lançar a versão estável.": "Quitar todas las herramientas de la página hasta que Chrome lance la versión estable.",
+ "<p>Tutorial com <code>navigator.modelContext</code>, <code>unregisterTool</code>, <code>provideContext</code> ou <code>clearContext</code> vem de antes de maio de 2026 (a troca para document é de 19/05/2026): nenhum desses nomes existe na spec de 16/10/2026. A mesma conta acima (0 linhas) é o seu teste antes de copiar código de blog.</p>": "<p>Un tutorial con <code>navigator.modelContext</code>, <code>unregisterTool</code>, <code>provideContext</code> o <code>clearContext</code> es de antes de mayo de 2026 (el cambio a document es del 19/05/2026): ninguno de esos nombres existe en la spec del 16/10/2026. La misma cuenta de arriba (0 líneas) es tu prueba antes de copiar código de un blog.</p>",
+ "Para desenvolvimento local, a flag. O token de origin trial é registrado para o domínio do seu site, e o Chrome estável não traz a API por padrão.": "Para desarrollo local, la flag. El token de origin trial se registra para el dominio de tu sitio, y Chrome estable no trae la API por defecto.",
+ "GEO e citação nas IAs: Formação inemaSEO": "GEO y citación en las IAs: Formación inemaSEO",
+ "O token é registrado para o domínio do site; em localhost, use a flag.": "El token se registra para el dominio del sitio; en localhost, usa la flag."
 }

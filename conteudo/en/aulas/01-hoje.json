@@ -142,7 +142,7 @@
           },
           {
             "rot": "Common mistake: an old tutorial",
-            "html": "<p>A tutorial that uses <code>navigator.modelContext</code>, <code>unregisterTool</code>, <code>provideContext</code>, or <code>clearContext</code> was written before October 16, 2026: none of those names exist in the current spec. The same count above (0 lines) is your test before you copy code from a blog.</p>"
+            "html": "<p>A tutorial that uses <code>navigator.modelContext</code>, <code>unregisterTool</code>, <code>provideContext</code>, or <code>clearContext</code> predates May 2026 (the switch to document happened on 05/19/2026): none of those names exist in the 10/16/2026 spec. The same count above (0 lines) is your test before you copy code from a blog.</p>"
           }
         ]
       }
@@ -194,7 +194,7 @@
             "The chrome://flags/#enable-webmcp-testing flag."
           ],
           "certa": 3,
-          "explica": "For local development, the flag. The origin trial token is valid for your domain, not for localhost on any machine, and stable Chrome does not ship the API by default.",
+          "explica": "For local development, use the flag. The origin trial token is registered for your site's domain, and stable Chrome doesn't ship the API by default.",
           "ref": "passos"
         },
         {
@@ -269,6 +269,11 @@
           "t": "WebKit's position (#670)",
           "href": "https://github.com/WebKit/standards-positions/issues/670",
           "icone": "chat"
+        },
+        {
+          "t": "GEO and getting cited by AIs: inemaSEO Track",
+          "href": "https://inematds.github.io/formacao-inemaseo-ias-v72/en/",
+          "icone": "lupa"
         },
         {
           "t": "Track course 0: how agents use a site today",

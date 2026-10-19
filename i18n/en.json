@@ -998,5 +998,9 @@
  "Nenhuma, porque avaliação de cliente já é conteúdo público do site.": "None, because customer reviews are already public content on the site.",
  "Sem rolagem horizontal em 390 px, no celular e no modo nativo.": "No horizontal scrolling at 390 px, on the phone and in native mode.",
  "Para o agente aprender com o formulário e repetir o caminho da pessoa.": "So the agent can learn from the form and repeat the person's path.",
- "Remover todas as ferramentas da página até o Chrome lançar a versão estável.": "Remove all the tools from the page until Chrome ships the stable version."
+ "Remover todas as ferramentas da página até o Chrome lançar a versão estável.": "Remove all the tools from the page until Chrome ships the stable version.",
+ "<p>Tutorial com <code>navigator.modelContext</code>, <code>unregisterTool</code>, <code>provideContext</code> ou <code>clearContext</code> vem de antes de maio de 2026 (a troca para document é de 19/05/2026): nenhum desses nomes existe na spec de 16/10/2026. A mesma conta acima (0 linhas) é o seu teste antes de copiar código de blog.</p>": "<p>A tutorial that uses <code>navigator.modelContext</code>, <code>unregisterTool</code>, <code>provideContext</code>, or <code>clearContext</code> predates May 2026 (the switch to document happened on 05/19/2026): none of those names exist in the 10/16/2026 spec. The same count above (0 lines) is your test before you copy code from a blog.</p>",
+ "Para desenvolvimento local, a flag. O token de origin trial é registrado para o domínio do seu site, e o Chrome estável não traz a API por padrão.": "For local development, use the flag. The origin trial token is registered for your site's domain, and stable Chrome doesn't ship the API by default.",
+ "GEO e citação nas IAs: Formação inemaSEO": "GEO and getting cited by AIs: inemaSEO Track",
+ "O token é registrado para o domínio do site; em localhost, use a flag.": "The token is registered for the site's domain; on localhost, use the flag."
 }
