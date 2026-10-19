@@ -162,7 +162,7 @@
     {
       "tipo": "pratica",
       "titulo": "Prática",
-      "sub": "Tudo local, sem custo.",
+      "sub": "Tudo local, sem custo. Cada exercício termina num pronto quando.",
       "exercicios": [
         {
           "id": "e1",
@@ -195,7 +195,7 @@
         {
           "p": "Por que o kit serve a página em 127.0.0.1 e não abre o arquivo direto?",
           "opcoes": [
-            "Porque o Playwright não abre arquivo local.",
+            "Porque o Playwright não consegue abrir arquivo local pelo caminho do disco.",
             "Porque o polyfill só funciona com Node.",
             "Porque a API exige contexto seguro, e 127.0.0.1 conta como seguro.",
             "Porque o origin trial só aceita endereço IP."
@@ -208,7 +208,7 @@
           "p": "O que o modo Sem prova?",
           "opcoes": [
             "Que a página funciona para quem não tem a API.",
-            "Que o polyfill foi carregado corretamente.",
+            "Que o polyfill foi carregado corretamente antes do registro das ferramentas.",
             "Que o token do origin trial está válido.",
             "Que o agente escolhe a ferramenta certa."
           ],
@@ -220,7 +220,7 @@
           "p": "O que é o @mcp-b/webmcp-polyfill 6.0.3 neste curso?",
           "opcoes": [
             "A implementação oficial do W3C para produção.",
-            "Um plugin do Chrome que liga a flag sozinho.",
+            "Um plugin do Chrome que liga a flag de teste sozinho, sem você abrir chrome://flags.",
             "Uma ponte que conecta a página ao Claude Desktop.",
             "Um ensaio não oficial e temporário da API da spec."
           ],
@@ -233,7 +233,7 @@
           "opcoes": [
             "O modo Sem, com o Chrome estável.",
             "O modo Nativo, Chromium do Playwright com a flag de teste.",
-            "O modo Polyfill, com ?ensaio=polyfill na URL.",
+            "O modo Polyfill, com ?ensaio=polyfill no fim do endereço da página do kit.",
             "Nenhum: sem token não há implementação."
           ],
           "certa": 1,

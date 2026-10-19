@@ -1,0 +1,287 @@
+{
+  "slug": "catalogo",
+  "num": 7,
+  "menu": "Catalog",
+  "titulo": "Design the catalog and migrate an existing site without breaking anyone",
+  "titulo_curto": "Catalog and migration",
+  "minutos": 18,
+  "lead": "A good catalog has few tools, each with one intent, a verb-based name, minimal input, and an error the agent understands. On a site that already exists, the rule moves out of the interface into a function that serves both the click and the tool. In this lesson you review a bad catalog with the validator and plan the migration of your site.",
+  "objetivo": "design a small catalog (one intent per tool), review it with the validator, and integrate it into an existing site with detection and fallback.",
+  "competencias": [
+    "desenhar-catalogo",
+    "revisar-com-validador",
+    "migrar-com-fallback"
+  ],
+  "aprende": [
+    {
+      "icone": "alvo",
+      "t": "One intent per tool, verb-based name, minimal input"
+    },
+    {
+      "icone": "check",
+      "t": "The kit's validator: spec rules and course rules"
+    },
+    {
+      "icone": "chat",
+      "t": "An error the agent understands: return { erro } instead of throwing"
+    },
+    {
+      "icone": "camadas",
+      "t": "Migrate: inventory, shared rule, thin wrapper, fallback"
+    }
+  ],
+  "hero_alt": "A dark workshop parts cabinet with small drawers and blank labels, one of them open showing neatly organized connectors.",
+  "secoes": [
+    {
+      "tipo": "diagrama",
+      "titulo": "Migrate without breaking people who don't have the API",
+      "sub": "Click each step.",
+      "estilo": "escada",
+      "nos": [
+        {
+          "icone": "lupa",
+          "titulo": "Inventory",
+          "sub": "what exists",
+          "detalhe": "List forms, handlers, services, and endpoints. E.g.: form → submitHandler → service → POST /api/inscricoes. It shows where the rule already exists and where it's stuck in the screen."
+        },
+        {
+          "icone": "alvo",
+          "titulo": "Priority",
+          "sub": "value × risk",
+          "detalhe": "Start with what is frequent, valuable, and read-only. Save the irreversible, poorly understood action for later, with confirmation."
+        },
+        {
+          "icone": "chip",
+          "titulo": "Rule",
+          "sub": "one function",
+          "detalhe": "Pull the rule out of the interface: the same function serves the person's click and the tool. In the kit, agenda.buscar and agenda.reservar."
+        },
+        {
+          "icone": "arquivo",
+          "titulo": "Wrapper",
+          "sub": "thin",
+          "detalhe": "The tool only validates, calls the rule, shows it on screen, and returns. No new logic hidden in execute."
+        },
+        {
+          "icone": "portao",
+          "titulo": "Fallback",
+          "sub": "sem mode",
+          "forte": true,
+          "detalhe": "Detect document.modelContext, and the site works the same without it. The lesson 8 battery proves it in sem mode before anything else."
+        }
+      ],
+      "legenda": "Steps adapted from the integration modules of the old track, now with the 10/16/2026 API."
+    },
+    {
+      "tipo": "passos",
+      "titulo": "Rules of a good catalog",
+      "sub": "The ones the validator checks and the ones only you can check.",
+      "passos": [
+        {
+          "titulo": "Intent",
+          "sub": "one per tool",
+          "texto": [
+            "Two tools that answer the same request force the agent to guess.",
+            "Start from the person's journey, not from the list of buttons."
+          ],
+          "exemplo": {
+            "rot": "Good",
+            "texto": "buscar_oficinas · reservar_vaga · minhas_reservas"
+          }
+        },
+        {
+          "titulo": "Description",
+          "sub": "what it does and what it doesn't",
+          "texto": [
+            "State the effect, what the tool does not do, and when to use it.",
+            "\"Does things\" and \"manages\" help no one choose."
+          ],
+          "exemplo": {
+            "rot": "Kit",
+            "texto": "Lists the agenda's workshops by theme. Read-only: it books nothing."
+          }
+        },
+        {
+          "titulo": "Input",
+          "sub": "minimal and closed",
+          "texto": [
+            "Only the needed fields, enum when the list is closed, additionalProperties: false.",
+            "Validate again in execute: in Chromium 156, invalid input reached execute (measured in the kit)."
+          ]
+        },
+        {
+          "titulo": "Error",
+          "sub": "as data",
+          "texto": [
+            "If execute throws, the agent receives only UnknownError, without the reason (Chromium 156).",
+            "A rule error comes back as { erro: 'tema inválido: cobol' }; throw only for the unexpected."
+          ],
+          "exemplo": {
+            "rot": "Kit",
+            "texto": "comErroUtil(fn) in kit/pagina/ferramentas.mjs"
+          }
+        }
+      ]
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "The validator against a bad catalog",
+      "sub": "validar-catalogo.mjs reads the definitions without opening a browser or running anything. An error fails (exit 1); a warning does not.",
+      "blocos": [
+        {
+          "rot": "Terminal · bad catalog and the kit's catalog",
+          "icone": "terminal",
+          "conteudo": "cd ~/projetos/formacao-webmcp-site-v72/kit\nnode scripts/validar-catalogo.mjs catalogos/ruim.mjs; echo \"saída: $?\"\nnode scripts/validar-catalogo.mjs; echo \"saída: $?\""
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Captured output (October 19, 2026)",
+            "html": "<pre>ERRO  fazer tudo\n      erro: nome fora da regra (1–128: letras, números, _ - .)\n      aviso: descrição curta: diga o que faz, o que NÃO faz e quando usar\n      aviso: sem inputSchema\n      aviso: diga se só lê (readOnlyHint) ou se tem consequência (consequentialHint)\nERRO  buscar\n      erro: anotação readOnlyHint não é true/false\n      aviso: descrição curta: diga o que faz, o que NÃO faz e quando usar\n      aviso: inputSchema aceita campo extra (use additionalProperties: false)\n      aviso: campo \"q\" sem description\nERRO  cancelar_reserva\n      erro: nome de ação com efeito sem consequentialHint\nERRO  ver_agenda\n      erro: descrição vazia\n      erro: anotação desconhecida: readOnly\n      aviso: sem inputSchema\n      aviso: diga se só lê (readOnlyHint) ou se tem consequência (consequentialHint)\nCATÁLOGO: 4 ferramentas · 5 erros · 8 avisos\nsaída: 1\nOK    buscar_oficinas\nOK    listar_comentarios\nOK    reservar_vaga\nOK    minhas_reservas\nCATÁLOGO: 4 ferramentas · 0 erros · 0 avisos\nsaída: 0</pre><p>Spec rules: name, non-empty description, unique names. Course rules: closed, described object schema, known and consistent annotations, a name for an action with effects marked with consequentialHint.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "In a framework: register on mount, abort on unmount",
+      "sub": "Template to adapt (does not run in the kit). Angular has experimental support, according to the Chrome doc from 10/07/2026; the pattern below works for any framework.",
+      "blocos": [
+        {
+          "rot": "Template · React component",
+          "icone": "caneta",
+          "conteudo": "useEffect(() => {\n  const mc = document.modelContext;\n  if (!mc) return;                       // no API: the screen stays the same\n  const ciclo = new AbortController();\n  registrar(mc, catalogo(agenda, ui), ciclo.signal).catch(() => {});\n  return () => ciclo.abort();            // unmounted: the tools leave\n}, [agenda]);"
+        },
+        {
+          "rot": "Template · JavaScript without a framework",
+          "icone": "caneta",
+          "conteudo": "// entrar na tela\nconst ciclo = new AbortController();\nif (document.modelContext) await registrar(document.modelContext, defsDaTela, ciclo.signal);\n// sair da tela (rota nova, modal fechado)\nciclo.abort();"
+        }
+      ]
+    },
+    {
+      "tipo": "pratica",
+      "titulo": "Practice",
+      "sub": "The validator and your site's plan. Each exercise ends with a done when.",
+      "exercicios": [
+        {
+          "id": "e1",
+          "titulo": "E1 · Watch the validator fail",
+          "min": "3 min",
+          "texto": "Run the validator block.",
+          "pronto": "<code>node scripts/validar-catalogo.mjs catalogos/ruim.mjs; echo \"saída: $?\"</code> → <code>CATÁLOGO: 4 ferramentas · 5 erros · 8 avisos</code> and <code>saída: 1</code>; the kit's own catalog → <code>0 erros</code> and <code>saída: 0</code>."
+        },
+        {
+          "id": "e2",
+          "titulo": "E2 · Fix the bad catalog",
+          "min": "15 min",
+          "texto": "Copy catalogos/ruim.mjs to catalogos/meu.mjs and fix it until the errors are gone: a name with no spaces, a useful description, a boolean and known annotation, cancelar_reserva with consequentialHint.",
+          "pronto": "<code>node scripts/validar-catalogo.mjs catalogos/meu.mjs; echo \"saída: $?\"</code> → <code>0 erros</code> and <code>saída: 0</code>."
+        },
+        {
+          "id": "e3",
+          "titulo": "E3 · Inventory of your site",
+          "min": "20 min",
+          "texto": "For your own site, write the inventory (form → handler → service → endpoint) and pick 3 tools: 2 that only read and 1 with a side effect, with the confirmation screen.",
+          "pronto": "A file catalogo-[your site].md with the 3 tools (name, description, input, annotation) and the shared rule for each one."
+        }
+      ]
+    },
+    {
+      "tipo": "quiz",
+      "titulo": "Lesson quiz",
+      "sub": "The explanation appears after your answer.",
+      "perguntas": [
+        {
+          "p": "The execute throws Error('sem vaga'). What does the agent receive in Chromium 156?",
+          "opcoes": [
+            "A generic UnknownError, with no reason.",
+            "The text 'sem vaga' in the result.",
+            "An OperationError with the original message.",
+            "Nothing: the call stays pending forever."
+          ],
+          "certa": 0,
+          "explica": "Measured on 10/19/2026: generic UnknownError. The 10/16 spec lists OperationError for this case; the build measures something else. A rule error comes back as { erro } so the agent can correct it.",
+          "ref": "passos"
+        },
+        {
+          "p": "Where does the booking rule live in a migrated site?",
+          "opcoes": [
+            "Inside the execute, separate from the form.",
+            "On the server only; the page just passes it along.",
+            "In the button's handler, and the execute simulates the click.",
+            "In a function used by both the click and the tool."
+          ],
+          "certa": 3,
+          "explica": "The same function serves both paths, so there are no two rules to drift apart. The execute is a thin wrapper. Validating again on the server is still required.",
+          "ref": "diagrama"
+        },
+        {
+          "p": "Which of these catalogs has the duplicate-intent problem?",
+          "opcoes": [
+            "buscar_oficinas and reservar_vaga.",
+            "buscar_oficinas and procurar_cursos.",
+            "minhas_reservas and reservar_vaga.",
+            "listar_comentarios and buscar_oficinas."
+          ],
+          "certa": 1,
+          "explica": "Searching workshops and searching courses answer the same request: the agent has to guess. The other pairs have different intents.",
+          "ref": "passos"
+        },
+        {
+          "p": "Why does the migration end in the Sem mode?",
+          "opcoes": [
+            "Because the Sem mode is the fastest to run.",
+            "Because the polyfill doesn't run on old sites.",
+            "Because most visitors don't have the API.",
+            "Because the origin trial requires a test without the API."
+          ],
+          "certa": 2,
+          "explica": "With no stable release date and no Safari or Firefox, most people don't have the API. If the site breaks for them, the migration failed, no matter how many tools it has.",
+          "ref": "diagrama"
+        }
+      ]
+    },
+    {
+      "tipo": "resumo",
+      "titulo": "In three sentences",
+      "itens": [
+        {
+          "t": "Catalog",
+          "texto": "Few tools, one intent each, a closed input, and errors returned as data."
+        },
+        {
+          "t": "Validator",
+          "texto": "Rules from the spec and the course, no browser: run it before you publish."
+        },
+        {
+          "t": "Migration",
+          "texto": "Inventory, shared rule, thin wrapper, and the site works the same in the Sem mode."
+        }
+      ]
+    },
+    {
+      "tipo": "links",
+      "titulo": "To go further",
+      "links": [
+        {
+          "t": "Chrome for Developers: WebMCP (limitations and frameworks)",
+          "href": "https://developer.chrome.com/docs/ai/webmcp",
+          "icone": "arquivo"
+        },
+        {
+          "t": "Spec: execution errors (tool execution error)",
+          "href": "https://webmachinelearning.github.io/webmcp/",
+          "icone": "arquivo"
+        },
+        {
+          "t": "Course 1: designing a good tool on the MCP server",
+          "href": "https://inematds.github.io/formacao-webmcp-mcp-v72/en/",
+          "icone": "camadas"
+        }
+      ]
+    }
+  ]
+}

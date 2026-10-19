@@ -1,0 +1,266 @@
+{
+  "slug": "ciclo",
+  "num": 4,
+  "menu": "Lifecycle",
+  "titulo": "Lifecycle: getTools, toolchange, AbortSignal, and cancellation",
+  "titulo_curto": "Lifecycle",
+  "minutos": 15,
+  "lead": "A tool is not forever: the page registers it when the function exists and removes it when it leaves the scene. In the 10/16/2026 spec there is no unregisterTool; what removes it is the signal of an AbortController. And the caller can cancel an execution midway. In this lesson you see the whole cycle and the events the browser fires.",
+  "objetivo": "register, list, remove with AbortSignal, and cancel an execution, knowing which events the browser fires at each step.",
+  "competencias": [
+    "remove-with-abortsignal",
+    "cancel-execution",
+    "listen-to-modelcontext-events"
+  ],
+  "aprende": [
+    {
+      "icone": "carregar",
+      "t": "Registering with a signal and the toolchange event"
+    },
+    {
+      "icone": "x",
+      "t": "Remove with abort(): the place of the old unregisterTool"
+    },
+    {
+      "icone": "relogio",
+      "t": "Cancel an execution: signal in execute and in executeTool"
+    },
+    {
+      "icone": "lista",
+      "t": "toolactivated and toolcancel: native fires them, polyfill doesn't"
+    }
+  ],
+  "hero_alt": "Dark connection panel with a few cables plugged in and a hand pulling one of them out.",
+  "secoes": [
+    {
+      "tipo": "diagrama",
+      "titulo": "The lifecycle of a tool",
+      "sub": "Click each step.",
+      "nos": [
+        {
+          "icone": "carregar",
+          "titulo": "Register",
+          "sub": "toolchange",
+          "detalhe": "registerTool(def, { signal }). The browser notifies the page and the agents with the toolchange event. Repeated name: InvalidStateError."
+        },
+        {
+          "icone": "play",
+          "titulo": "Execute",
+          "sub": "toolactivated",
+          "detalhe": "When execution starts, the ModelContext fires toolactivated with toolName. The execute receives its own { signal } for the call."
+        },
+        {
+          "icone": "relogio",
+          "titulo": "Cancel",
+          "sub": "toolcancel",
+          "forte": true,
+          "detalhe": "The caller passes { signal } to executeTool and aborts. The execute's signal becomes aborted, the call rejects with AbortError, and the browser fires toolcancel."
+        },
+        {
+          "icone": "x",
+          "titulo": "Remove",
+          "sub": "abort()",
+          "detalhe": "The abort() of the controller used at registration removes the tool (toolchange again). It's what the kit does on pagehide and what a component does when it unmounts."
+        }
+      ],
+      "volta": "Register again when the function comes back (another route, another state)",
+      "legenda": "Measured on 10/19/2026: Chromium 156 fires all three events; polyfill 6.0.3 fires only toolchange.",
+      "dica": "Chrome docs: window.ontoolactivated and window.ontoolcancel have not been supported since 156. Listen on document.modelContext."
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "The lifecycle in code",
+      "sub": "Excerpt from kit/scripts/ciclo.mjs (runs inside the page). Two controllers: one for registration, one for the call.",
+      "blocos": [
+        {
+          "rot": "Simplified excerpt · kit/scripts/ciclo.mjs",
+          "icone": "arquivo",
+          "conteudo": "const registro = new AbortController();\nawait mc.registerTool({\n  name: 'tarefa_lenta', description: 'Leva 2 segundos. Existe só para ensinar cancelamento.',\n  async execute(_, { signal }) {\n    return new Promise((ok, falha) => {\n      const t = setTimeout(() => ok({ terminou: true }), 2000);\n      signal.addEventListener('abort', () => { clearTimeout(t); falha(new DOMException('cancelada', 'AbortError')); });\n    });\n  }\n}, { signal: registro.signal });\n\nconst t = (await mc.getTools()).find(x => x.name === 'tarefa_lenta');\nconst chamada = new AbortController();\nsetTimeout(() => chamada.abort(), 100);\ntry { await mc.executeTool(t, {}, { signal: chamada.signal }); }\ncatch (e) { /* AbortError */ }\n\nregistro.abort();   // removes the tool: there is no unregisterTool"
+        },
+        {
+          "rot": "Terminal · lifecycle in native and in the polyfill",
+          "icone": "terminal",
+          "conteudo": "cd ~/projetos/formacao-webmcp-site-v72/kit\nnode scripts/ciclo.mjs nativo; echo \"saída: $?\"\nnode scripts/ciclo.mjs polyfill; echo \"saída: $?\""
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Captured output (October 19, 2026)",
+            "html": "<pre>== Chromium 156.0.8078.4 (Playwright) · modo: nativo\nantes: 4 ferramentas\nregistrou tarefa_lenta: 5 ferramentas\nnome repetido: recusado (InvalidStateError)\nexecução cancelada pelo chamador: AbortError\ndepois do abort(): 4 ferramentas\neventos: toolchange toolactivated:tarefa_lenta toolcancel:tarefa_lenta toolchange\nsaída: 0\n== Chromium 156.0.8078.4 (Playwright) · modo: polyfill\nantes: 4 ferramentas\nregistrou tarefa_lenta: 5 ferramentas\nnome repetido: recusado (InvalidStateError)\nexecução cancelada pelo chamador: AbortError\ndepois do abort(): 4 ferramentas\neventos: toolchange toolchange\nsaída: 0</pre><p>Same sequence in both. The difference is in the \"eventos\" line: only native fires toolactivated and toolcancel.</p>"
+          },
+          {
+            "rot": "Common mistake: an execute that ignores the signal",
+            "html": "<p>If execute doesn't listen to <code>signal</code>, canceling rejects the call, but the work keeps going: the setTimeout fires, the fetch completes, the booking happens. For a tool with side effects, check <code>signal.aborted</code> before writing.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "passos",
+      "titulo": "Where to register and where to abort",
+      "sub": "Same rule in any framework: register at the start, abort at the end.",
+      "passos": [
+        {
+          "titulo": "Page",
+          "sub": "load",
+          "texto": [
+            "Register after the rules are ready and abort on pagehide.",
+            "This is what iniciarWebMCP does in the kit."
+          ],
+          "exemplo": {
+            "rot": "Kit",
+            "texto": "addEventListener('pagehide', () => pagina.abort(), { once: true })"
+          }
+        },
+        {
+          "titulo": "Route",
+          "sub": "SPA",
+          "texto": [
+            "A tool for a single screen exists only while that screen is mounted.",
+            "When the route changes: abort() and register the new screen's tools."
+          ]
+        },
+        {
+          "titulo": "Component",
+          "sub": "effect",
+          "texto": [
+            "In React, register in the effect and abort in the cleanup; strict mode mounts twice, and the repeated name would throw InvalidStateError.",
+            "The pattern holds for other frameworks; lesson 7 shows the model."
+          ]
+        },
+        {
+          "titulo": "Batch",
+          "sub": "all or nothing",
+          "texto": [
+            "If the third of four fails, the first two are left hanging.",
+            "The kit's registrar() uses one controller per batch and aborts everything on failure."
+          ]
+        }
+      ]
+    },
+    {
+      "tipo": "pratica",
+      "titulo": "Practice",
+      "sub": "Rehearsal in both modes with an API. Each exercise ends with a done when.",
+      "exercicios": [
+        {
+          "id": "e1",
+          "titulo": "E1 · Cycle in native",
+          "min": "3 min",
+          "texto": "Run the cycle block and read it line by line.",
+          "pronto": "<code>node scripts/ciclo.mjs nativo</code> → <code>nome repetido: recusado (InvalidStateError)</code>, <code>execução cancelada pelo chamador: AbortError</code>, <code>depois do abort(): 4 ferramentas</code> and <code>eventos: toolchange toolactivated:tarefa_lenta toolcancel:tarefa_lenta toolchange</code>."
+        },
+        {
+          "id": "e2",
+          "titulo": "E2 · The polyfill difference",
+          "min": "3 min",
+          "texto": "Run the same in polyfill and note in your status-webmcp.md (lesson 1) what the polyfill doesn't do.",
+          "pronto": "<code>node scripts/ciclo.mjs polyfill</code> → <code>eventos: toolchange toolchange</code> and <code>saída: 0</code>; the line is in your file."
+        },
+        {
+          "id": "e3",
+          "titulo": "E3 · All or nothing",
+          "min": "5 min",
+          "texto": "Run the kit's rule tests: one of them simulates the 2nd tool failing at registration.",
+          "pronto": "<code>node --test 2>&1 | grep -E \"^ℹ (pass|fail)\"</code> → <code>ℹ pass 4</code> and <code>ℹ fail 0</code>."
+        }
+      ]
+    },
+    {
+      "tipo": "quiz",
+      "titulo": "Lesson quiz",
+      "sub": "The explanation appears after your answer.",
+      "perguntas": [
+        {
+          "p": "How do you remove a tool in the 10/16/2026 spec?",
+          "opcoes": [
+            "By calling unregisterTool(name) on modelContext.",
+            "Registering the same tool again, this time with an empty description.",
+            "By calling clearContext() and registering the rest.",
+            "By aborting the AbortController passed at registration."
+          ],
+          "certa": 3,
+          "explica": "registerTool(def, { signal }) and then abort(). unregisterTool, provideContext and clearContext don't exist in the current spec.",
+          "ref": "diagrama"
+        },
+        {
+          "p": "The caller aborts the execution. What happens to execute?",
+          "opcoes": [
+            "Nothing: execute never finds out.",
+            "The execute signal becomes aborted; it should stop.",
+            "The browser kills the tab to be safe.",
+            "The execute restarts from scratch with the same input."
+          ],
+          "certa": 1,
+          "explica": "execute gets its own { signal } for the call. If it doesn't listen, the work continues despite the rejection: check signal.aborted before writing.",
+          "ref": "codigo"
+        },
+        {
+          "p": "Your test waits for toolactivated and runs only on polyfill 6.0.3. What happens?",
+          "opcoes": [
+            "Pass: the polyfill fires the same events.",
+            "It passes, but the event arrives with a different name and the test has to change.",
+            "Fail: the polyfill does not fire toolactivated.",
+            "Fail: the polyfill does not fire toolchange."
+          ],
+          "certa": 2,
+          "explica": "Measured on 10/19/2026: the polyfill fires only toolchange. That is why the kit's battery tests in both modes and does not depend on toolactivated.",
+          "ref": "codigo"
+        },
+        {
+          "p": "In a React component, where does abort() go?",
+          "opcoes": [
+            "In the cleanup of the effect that registered.",
+            "In the submit button's onClick, right after saving the form.",
+            "Nowhere: the browser cleans up on its own.",
+            "In the constructor, before registering."
+          ],
+          "certa": 0,
+          "explica": "Register in the effect and abort in the cleanup. Without that, the second mount tries the same name and gets InvalidStateError.",
+          "ref": "passos"
+        }
+      ]
+    },
+    {
+      "tipo": "resumo",
+      "titulo": "In three sentences",
+      "itens": [
+        {
+          "t": "Remove",
+          "texto": "Signal at registration and abort() when the function goes away; there is no unregisterTool."
+        },
+        {
+          "t": "Cancel",
+          "texto": "Signal in executeTool; the execute listens to its own signal and stops."
+        },
+        {
+          "t": "Events",
+          "texto": "toolchange, toolactivated and toolcancel on document.modelContext; the polyfill fires only the first."
+        }
+      ]
+    },
+    {
+      "tipo": "links",
+      "titulo": "To go further",
+      "links": [
+        {
+          "t": "Spec: ModelContext events (§4.3)",
+          "href": "https://webmachinelearning.github.io/webmcp/#events",
+          "icone": "arquivo"
+        },
+        {
+          "t": "MDN: AbortController",
+          "href": "https://developer.mozilla.org/en-US/docs/Web/API/AbortController",
+          "icone": "arquivo"
+        },
+        {
+          "t": "Course 3: the agent that consumes WebMCP",
+          "href": "https://inematds.github.io/formacao-webmcp-navegador-v72/en/",
+          "icone": "robo"
+        }
+      ]
+    }
+  ]
+}

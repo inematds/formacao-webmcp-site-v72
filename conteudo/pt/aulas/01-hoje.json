@@ -150,7 +150,7 @@
     {
       "tipo": "pratica",
       "titulo": "Prática",
-      "sub": "Sem instalar nada além de curl.",
+      "sub": "Sem instalar nada além de curl. Cada exercício termina num pronto quando.",
       "exercicios": [
         {
           "id": "e1",

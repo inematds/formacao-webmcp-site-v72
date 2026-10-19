@@ -1,0 +1,287 @@
+{
+  "slug": "catalogo",
+  "num": 7,
+  "menu": "Catálogo",
+  "titulo": "Diseñar el catálogo y migrar un sitio existente sin romper a nadie",
+  "titulo_curto": "Catálogo y migración",
+  "minutos": 18,
+  "lead": "Un buen catálogo tiene pocas tools, cada una con una intención, nombre con verbo, entrada mínima y un error que el agente entiende. En un sitio que ya existe, la regla sale de la interfaz hacia una función que atiende el clic y la tool. En esta clase revisas un catálogo malo con el validador y planeas la migración de tu sitio.",
+  "objetivo": "diseñar un catálogo pequeño (una intención por tool), revisarlo con el validador e integrarlo a un sitio existente con detección y fallback.",
+  "competencias": [
+    "desenhar-catalogo",
+    "revisar-com-validador",
+    "migrar-com-fallback"
+  ],
+  "aprende": [
+    {
+      "icone": "alvo",
+      "t": "Una intención por tool, nombre con verbo, entrada mínima"
+    },
+    {
+      "icone": "check",
+      "t": "El validador del kit: reglas de la spec y reglas del curso"
+    },
+    {
+      "icone": "chat",
+      "t": "Error que el agente entiende: devolver { erro } en vez de lanzar"
+    },
+    {
+      "icone": "camadas",
+      "t": "Migrar: inventario, regla compartida, wrapper fino, fallback"
+    }
+  ],
+  "hero_alt": "Gavetero de taller oscuro con cajones pequeños y etiquetas en blanco, uno de ellos abierto con conectores ordenados.",
+  "secoes": [
+    {
+      "tipo": "diagrama",
+      "titulo": "Migrar sin romper a quien no tiene la API",
+      "sub": "Haz clic en cada etapa.",
+      "estilo": "escada",
+      "nos": [
+        {
+          "icone": "lupa",
+          "titulo": "Inventario",
+          "sub": "lo que existe",
+          "detalhe": "Lista formularios, handlers, servicios y endpoints. Ej.: formulario → submitHandler → servicio → POST /api/inscricoes. Muestra dónde la regla ya existe y dónde está atada a la pantalla."
+        },
+        {
+          "icone": "alvo",
+          "titulo": "Prioridad",
+          "sub": "valor × riesgo",
+          "detalhe": "Empieza por lo que es frecuente, valioso y solo lee. La acción irreversible y mal entendida queda para después, con confirmación."
+        },
+        {
+          "icone": "chip",
+          "titulo": "Regla",
+          "sub": "una función",
+          "detalhe": "Saca la regla de la interfaz: la misma función atiende el clic de la persona y la herramienta. En el kit, agenda.buscar y agenda.reservar."
+        },
+        {
+          "icone": "arquivo",
+          "titulo": "Wrapper",
+          "sub": "delgado",
+          "detalhe": "La herramienta solo valida, llama a la regla, lo muestra en pantalla y devuelve el resultado. Nada de lógica nueva escondida en el execute."
+        },
+        {
+          "icone": "portao",
+          "titulo": "Fallback",
+          "sub": "modo Sem",
+          "forte": true,
+          "detalhe": "Detección de document.modelContext y el sitio igual sin ella. La batería de la clase 8 lo prueba en el modo Sem antes que cualquier otra cosa."
+        }
+      ],
+      "legenda": "Etapas adaptadas de los módulos de integración de la formación anterior, ahora con la API del 16/10/2026."
+    },
+    {
+      "tipo": "passos",
+      "titulo": "Reglas de un buen catálogo",
+      "sub": "Las que el validador comprueba y las que solo tú puedes comprobar.",
+      "passos": [
+        {
+          "titulo": "Intención",
+          "sub": "una por herramienta",
+          "texto": [
+            "Dos herramientas que responden al mismo pedido obligan al agente a adivinar.",
+            "Empieza por el recorrido de la persona, no por la lista de botones."
+          ],
+          "exemplo": {
+            "rot": "Bueno",
+            "texto": "buscar_oficinas · reservar_vaga · minhas_reservas"
+          }
+        },
+        {
+          "titulo": "Descripción",
+          "sub": "lo que hace y lo que no",
+          "texto": [
+            "Di el efecto, lo que la herramienta no hace y cuándo usarla.",
+            "\"Hace cosas\" y \"gestiona\" no ayudan a nadie a elegir."
+          ],
+          "exemplo": {
+            "rot": "Kit",
+            "texto": "Lista los talleres de la agenda por tema. Solo lee: no reserva nada."
+          }
+        },
+        {
+          "titulo": "Entrada",
+          "sub": "mínima y cerrada",
+          "texto": [
+            "Solo los campos necesarios, enum cuando la lista es cerrada, additionalProperties: false.",
+            "Valida de nuevo en el execute: en Chromium 156, la entrada inválida llegó al execute (medido en el kit)."
+          ]
+        },
+        {
+          "titulo": "Error",
+          "sub": "como dato",
+          "texto": [
+            "Si el execute lanza una excepción, el agente recibe solo UnknownError, sin el motivo (Chromium 156).",
+            "El error de regla vuelve como { erro: 'tema inválido: cobol' }; throw solo para lo inesperado."
+          ],
+          "exemplo": {
+            "rot": "Kit",
+            "texto": "comErroUtil(fn) en kit/pagina/ferramentas.mjs"
+          }
+        }
+      ]
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "El validador contra un catálogo malo",
+      "sub": "validar-catalogo.mjs lee las definiciones sin abrir el navegador ni ejecutar nada. El error reprueba (saída 1); el aviso no.",
+      "blocos": [
+        {
+          "rot": "Terminal · catálogo malo y el del kit",
+          "icone": "terminal",
+          "conteudo": "cd ~/projetos/formacao-webmcp-site-v72/kit\nnode scripts/validar-catalogo.mjs catalogos/ruim.mjs; echo \"saída: $?\"\nnode scripts/validar-catalogo.mjs; echo \"saída: $?\""
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Salida capturada (19/10/2026)",
+            "html": "<pre>ERRO  fazer tudo\n      erro: nome fora da regra (1–128: letras, números, _ - .)\n      aviso: descrição curta: diga o que faz, o que NÃO faz e quando usar\n      aviso: sem inputSchema\n      aviso: diga se só lê (readOnlyHint) ou se tem consequência (consequentialHint)\nERRO  buscar\n      erro: anotação readOnlyHint não é true/false\n      aviso: descrição curta: diga o que faz, o que NÃO faz e quando usar\n      aviso: inputSchema aceita campo extra (use additionalProperties: false)\n      aviso: campo \"q\" sem description\nERRO  cancelar_reserva\n      erro: nome de ação com efeito sem consequentialHint\nERRO  ver_agenda\n      erro: descrição vazia\n      erro: anotação desconhecida: readOnly\n      aviso: sem inputSchema\n      aviso: diga se só lê (readOnlyHint) ou se tem consequência (consequentialHint)\nCATÁLOGO: 4 ferramentas · 5 erros · 8 avisos\nsaída: 1\nOK    buscar_oficinas\nOK    listar_comentarios\nOK    reservar_vaga\nOK    minhas_reservas\nCATÁLOGO: 4 ferramentas · 0 erros · 0 avisos\nsaída: 0</pre><p>Reglas de la spec: nombre, descripción no vacía, nombres únicos. Reglas del curso: schema object cerrado y descrito, anotaciones conocidas y coherentes, nombre de acción con efecto marcado con consequentialHint.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "En un framework: registrar al montar, abortar al desmontar",
+      "sub": "Modelo para adaptar (no corre en el kit). Angular tiene soporte experimental, según la doc de Chrome del 07/10/2026; el patrón de abajo vale para cualquiera.",
+      "blocos": [
+        {
+          "rot": "Modelo · componente React",
+          "icone": "caneta",
+          "conteudo": "useEffect(() => {\n  const mc = document.modelContext;\n  if (!mc) return;                       // sin la API: la pantalla sigue igual\n  const ciclo = new AbortController();\n  registrar(mc, catalogo(agenda, ui), ciclo.signal).catch(() => {});\n  return () => ciclo.abort();            // se desmontó: las herramientas salen\n}, [agenda]);"
+        },
+        {
+          "rot": "Modelo · JavaScript sin framework",
+          "icone": "caneta",
+          "conteudo": "// entrar en la pantalla\nconst ciclo = new AbortController();\nif (document.modelContext) await registrar(document.modelContext, defsDaTela, ciclo.signal);\n// salir de la pantalla (ruta nueva, modal cerrado)\nciclo.abort();"
+        }
+      ]
+    },
+    {
+      "tipo": "pratica",
+      "titulo": "Práctica",
+      "sub": "Validador y el plan de tu sitio. Cada ejercicio termina con un listo cuando.",
+      "exercicios": [
+        {
+          "id": "e1",
+          "titulo": "E1 · Ver cómo el validador reprueba",
+          "min": "3 min",
+          "texto": "Ejecuta el bloque del validador.",
+          "pronto": "<code>node scripts/validar-catalogo.mjs catalogos/ruim.mjs; echo \"saída: $?\"</code> → <code>CATÁLOGO: 4 ferramentas · 5 erros · 8 avisos</code> y <code>saída: 1</code>; el del kit → <code>0 erros</code> y <code>saída: 0</code>."
+        },
+        {
+          "id": "e2",
+          "titulo": "E2 · Arreglar el catálogo malo",
+          "min": "15 min",
+          "texto": "Copia catalogos/ruim.mjs a catalogos/meu.mjs y corrige hasta dejar los errores en cero: nombre sin espacios, descripción útil, anotación booleana y conocida, cancelar_reserva con consequentialHint.",
+          "pronto": "<code>node scripts/validar-catalogo.mjs catalogos/meu.mjs; echo \"saída: $?\"</code> → <code>0 erros</code> y <code>saída: 0</code>."
+        },
+        {
+          "id": "e3",
+          "titulo": "E3 · Inventario de tu sitio",
+          "min": "20 min",
+          "texto": "Para tu sitio, escribe el inventario (formulario → handler → servicio → endpoint) y elige 3 tools: 2 que solo leen y 1 con efecto, con la pantalla de confirmación.",
+          "pronto": "Un archivo catalogo-[tu sitio].md con las 3 tools (nombre, descripción, entrada, anotación) y la regla compartida de cada una."
+        }
+      ]
+    },
+    {
+      "tipo": "quiz",
+      "titulo": "Prueba de la clase",
+      "sub": "La explicación aparece después de la respuesta.",
+      "perguntas": [
+        {
+          "p": "El execute lanza Error('sem vaga'). ¿Qué recibe el agente en Chromium 156?",
+          "opcoes": [
+            "Un UnknownError genérico, sin el motivo.",
+            "El texto 'sem vaga' en el resultado.",
+            "Un OperationError con el mensaje original.",
+            "Nada: la llamada queda pendiente para siempre."
+          ],
+          "certa": 0,
+          "explica": "Medido el 19/10/2026: UnknownError genérico. La spec del 16/10 lista OperationError para este caso; el build mide otra cosa. Un error de regla vuelve como { erro } para que el agente pueda corregirlo.",
+          "ref": "passos"
+        },
+        {
+          "p": "¿Dónde vive la regla de reservar en un sitio migrado?",
+          "opcoes": [
+            "Dentro del execute, separada del formulario.",
+            "Solo en el servidor; la página solo reenvía.",
+            "En el handler del botón, y el execute simula el clic.",
+            "En una función que usan tanto el clic como la tool."
+          ],
+          "certa": 3,
+          "explica": "La misma función atiende los dos caminos: así no hay dos reglas que puedan divergir. El execute es un wrapper delgado. Validar de nuevo en el servidor sigue siendo obligatorio.",
+          "ref": "diagrama"
+        },
+        {
+          "p": "¿Cuál de estos catálogos tiene el problema de intención duplicada?",
+          "opcoes": [
+            "buscar_oficinas y reservar_vaga.",
+            "buscar_oficinas y procurar_cursos.",
+            "minhas_reservas y reservar_vaga.",
+            "listar_comentarios y buscar_oficinas."
+          ],
+          "certa": 1,
+          "explica": "Buscar oficinas y procurar cursos responden al mismo pedido: el agente tiene que adivinar. Los otros pares tienen intenciones distintas.",
+          "ref": "passos"
+        },
+        {
+          "p": "¿Por qué la migración termina en el modo Sem?",
+          "opcoes": [
+            "Porque el modo Sem es el más rápido de ejecutar.",
+            "Porque el polyfill no corre en sitios antiguos.",
+            "Porque la mayoría de los visitantes no tiene la API.",
+            "Porque el origin trial exige una prueba sin la API."
+          ],
+          "certa": 2,
+          "explica": "Sin fecha de estable y sin Safari ni Firefox, quien no tiene la API es la mayoría. Si el sitio se rompe para ellos, la migración falló, por más tools que tenga.",
+          "ref": "diagrama"
+        }
+      ]
+    },
+    {
+      "tipo": "resumo",
+      "titulo": "En tres frases",
+      "itens": [
+        {
+          "t": "Catálogo",
+          "texto": "Pocas tools, una intención cada una, entrada cerrada y error devuelto como dato."
+        },
+        {
+          "t": "Validador",
+          "texto": "Reglas de la spec y del curso, sin navegador: ejecútalo antes de publicar."
+        },
+        {
+          "t": "Migración",
+          "texto": "Inventario, regla compartida, wrapper delgado y el sitio igual en el modo Sem."
+        }
+      ]
+    },
+    {
+      "tipo": "links",
+      "titulo": "Para ir más allá",
+      "links": [
+        {
+          "t": "Chrome for Developers: WebMCP (limitaciones y frameworks)",
+          "href": "https://developer.chrome.com/docs/ai/webmcp",
+          "icone": "arquivo"
+        },
+        {
+          "t": "Spec: errores de ejecución (tool execution error)",
+          "href": "https://webmachinelearning.github.io/webmcp/",
+          "icone": "arquivo"
+        },
+        {
+          "t": "Curso 1: diseñar una buena tool en el servidor MCP",
+          "href": "https://inematds.github.io/formacao-webmcp-mcp-v72/es/",
+          "icone": "camadas"
+        }
+      ]
+    }
+  ]
+}

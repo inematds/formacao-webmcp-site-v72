@@ -104,7 +104,7 @@
     {
       "tipo": "pratica",
       "titulo": "Prática",
-      "sub": "Nativo e polyfill.",
+      "sub": "Nativo e polyfill. Cada exercício termina num pronto quando.",
       "exercicios": [
         {
           "id": "e1",

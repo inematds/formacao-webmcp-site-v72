@@ -1,0 +1,260 @@
+{
+  "slug": "primeira",
+  "num": 3,
+  "menu": "Primera",
+  "titulo": "Primera tool: registerTool con inputSchema y execute",
+  "titulo_curto": "Primera tool",
+  "minutos": 18,
+  "lead": "Una tool de WebMCP es un objeto con nombre, descripción, esquema de entrada y una función execute. La página la registra; el agente las lista con getTools y la llama con executeTool. En esta clase lees la tool de búsqueda del kit, la llamas como la llamaría un agente y registras la tuya.",
+  "objetivo": "registrar una tool con nombre, descripción, inputSchema y execute, y llamarla como la llamaría un agente, viendo el resultado y la pantalla.",
+  "competencias": [
+    "escrever-definicao-de-ferramenta",
+    "chamar-com-executeTool",
+    "ler-resultado-em-json"
+  ],
+  "aprende": [
+    {
+      "icone": "arquivo",
+      "t": "Los campos de una tool y las reglas de nombre y descripción"
+    },
+    {
+      "icone": "lista",
+      "t": "inputSchema en JSON Schema, cerrado y descrito"
+    },
+    {
+      "icone": "play",
+      "t": "executeTool: entra un objeto, sale texto JSON"
+    },
+    {
+      "icone": "caneta",
+      "t": "Tu primera tool en extras.mjs"
+    }
+  ],
+  "hero_alt": "Una mano encajando un conector metálico en una regleta de puertos vacía, con un monitor desenfocado al fondo.",
+  "secoes": [
+    {
+      "tipo": "diagrama",
+      "titulo": "De la definición al resultado",
+      "sub": "Haz clic en cada paso.",
+      "nos": [
+        {
+          "icone": "arquivo",
+          "titulo": "Definición",
+          "sub": "objeto JS",
+          "detalhe": "name (de 1 a 128 caracteres: letras y números ASCII, _ - .), title opcional, description no vacía, inputSchema (JSON Schema), execute(input, { signal }) y annotations opcionales."
+        },
+        {
+          "icone": "carregar",
+          "titulo": "registerTool",
+          "sub": "la página",
+          "detalhe": "document.modelContext.registerTool(definição, { signal }) devuelve una Promise sin valor. Rechaza con InvalidStateError si el nombre se repite, si no cumple la regla o si la descripción está vacía."
+        },
+        {
+          "icone": "lupa",
+          "titulo": "getTools",
+          "sub": "el agente",
+          "detalhe": "Devuelve las tools registradas con name, title, description, inputSchema, annotations, origin y window. Imprime solo lo que necesitas: window no se convierte en JSON."
+        },
+        {
+          "icone": "play",
+          "titulo": "executeTool",
+          "sub": "la llamada",
+          "forte": true,
+          "detalhe": "executeTool(ferramenta, objeto, { signal }). El navegador ejecuta tu execute con el objeto y devuelve el resultado como TEXTO JSON (Promise de string). Quien llama hace JSON.parse."
+        },
+        {
+          "icone": "check",
+          "titulo": "Pantalla",
+          "sub": "la persona ve",
+          "detalhe": "En el kit, la búsqueda del agente actualiza la misma lista que ve la persona. Agente y persona ven el mismo estado."
+        }
+      ],
+      "legenda": "Spec del 16/10/2026 y Chromium 156.0.8078.4. Si cambia, la clase 1 avisa: confirma la fecha antes."
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "La tool de búsqueda del kit",
+      "sub": "Fragmento de kit/pagina/ferramentas.mjs. La misma agenda.buscar atiende el formulario y la tool.",
+      "blocos": [
+        {
+          "rot": "Fragmento · kit/pagina/ferramentas.mjs",
+          "icone": "arquivo",
+          "conteudo": "{\n  name: 'buscar_oficinas',\n  title: 'Buscar oficinas',\n  description: 'Lista as oficinas da agenda por tema. Só lê: não reserva nada. Use apenasComVaga=true para ver só as que ainda têm vaga.',\n  inputSchema: {\n    type: 'object',\n    properties: {\n      tema: { type: 'string', enum: TEMAS, description: 'Tema da oficina.' },\n      apenasComVaga: { type: 'boolean', description: 'true = só oficinas com vaga.' }\n    },\n    additionalProperties: false\n  },\n  annotations: { readOnlyHint: true },\n  execute: comErroUtil(async input => {\n    const lista = agenda.buscar(input);\n    ui.mostrarResultados(lista, input);   // a pessoa vê o mesmo que o agente recebeu\n    return { total: lista.length, oficinas: lista };\n  })\n}"
+        },
+        {
+          "rot": "Fragmento · registrar con detección (ferramentas.mjs)",
+          "icone": "arquivo",
+          "conteudo": "const mc = document.modelContext;   // nombre actual (16/10/2026)\nif (!mc || typeof mc.registerTool !== 'function') {\n  aviso?.('Este navegador não expõe WebMCP. Tudo funciona pelo formulário.');\n  return { modo: 'sem', registradas: 0 };\n}\nconst pagina = new AbortController();\naddEventListener('pagehide', () => pagina.abort(), { once: true });\nawait registrar(mc, defs, pagina.signal);"
+        }
+      ]
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "Llamar como lo llamaría un agente",
+      "sub": "listar.mjs hace getTools; executar.mjs hace executeTool con el objeto que le pasas y muestra la pantalla después.",
+      "blocos": [
+        {
+          "rot": "Terminal · listar y ejecutar",
+          "icone": "terminal",
+          "conteudo": "cd ~/projetos/formacao-webmcp-site-v72/kit\nnode scripts/listar.mjs nativo\nnode scripts/executar.mjs nativo buscar_oficinas '{\"tema\":\"webmcp\",\"apenasComVaga\":true}'; echo \"saída: $?\""
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Salida capturada (19/10/2026)",
+            "html": "<pre>== Chromium 156.0.8078.4 (Playwright) · modo: nativo\nbuscar_oficinas      readOnlyHint\nlistar_comentarios   readOnlyHint, untrustedContentHint\nminhas_reservas      readOnlyHint\nreservar_vaga        consequentialHint\n4 ferramentas registradas\n== Chromium 156.0.8078.4 (Playwright) · modo: nativo\nresultado (string): {\"total\":1,\"oficinas\":[{\"id\":\"of-301\",\"titulo\":\"Primeira ferramenta WebMCP\",\"tema\":\"webmcp\",\"data\":\"2026-11-18\",\"vagas\":4}]}\ntela · resultados: 1 · reservas: Nenhuma reserva.\nsaída: 0</pre><p>\"resultado (string)\": el navegador devuelve texto JSON, como manda la spec. La lista de la pantalla también quedó con 1 taller.</p>"
+          },
+          {
+            "rot": "Error común: texto en la entrada, throw en el execute",
+            "html": "<pre>== Chromium 156.0.8078.4 (Playwright) · modo: nativo\nnavigator.modelContext (nome antigo): undefined\nentrada em texto JSON em vez de objeto: TypeError\nexecute que lança: UnknownError: Tool was executed but the invocation failed. For example, the script function threw an error\n== Chromium 156.0.8078.4 (Playwright) · modo: polyfill\nnavigator.modelContext (nome antigo): undefined\nentrada em texto JSON em vez de objeto: TypeError\nexecute que lança: UnknownError: Tool execution failed</pre><p>Los ejemplos antiguos pasaban <code>JSON.stringify(input)</code> para esquivar una implementación de septiembre: hoy da TypeError en los dos. Y el motivo de un <code>throw</code> no le llega al agente (UnknownError genérico). Por eso el kit devuelve <code>{ erro }</code> como dato (clase 7).</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "Tu primera herramienta",
+      "sub": "El bloque copia la página a un ensayo, escribe un extras.mjs con contar_vagas y lo verifica. Para que valga en el kit, pega la misma lista en kit/pagina/extras.mjs.",
+      "blocos": [
+        {
+          "rot": "Terminal · ensayo con contar_vagas",
+          "icone": "caneta",
+          "conteudo": "cd ~/projetos/formacao-webmcp-site-v72/kit\nE=${TMPDIR:-/tmp}/ensaio-webmcp-site/a3; rm -rf $E; mkdir -p $E; cp -r pagina/. $E/\ncat > $E/extras.mjs <<'FIM'\nexport function extras(agenda) {\n  return [{\n    name: 'contar_vagas',\n    description: 'Soma as vagas livres das oficinas de um tema. Só lê: não reserva nada.',\n    inputSchema: {\n      type: 'object',\n      properties: { tema: { type: 'string', enum: ['html', 'javascript', 'webmcp', 'mcp'], description: 'Tema da oficina.' } },\n      required: ['tema'],\n      additionalProperties: false\n    },\n    annotations: { readOnlyHint: true },\n    async execute({ tema }) {\n      const lista = agenda.buscar({ tema });\n      return { tema, vagas: lista.reduce((soma, o) => soma + o.vagas, 0) };\n    }\n  }];\n}\nFIM\nPAGINA=$E node scripts/listar.mjs nativo | tail -1\nPAGINA=$E node scripts/executar.mjs nativo contar_vagas '{\"tema\":\"html\"}'; echo \"saída: $?\""
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Salida capturada (19/10/2026)",
+            "html": "<pre>5 ferramentas registradas\n== Chromium 156.0.8078.4 (Playwright) · modo: nativo\nresultado (string): {\"tema\":\"html\",\"vagas\":3}\ntela · resultados: 6 · reservas: Nenhuma reserva.\nsaída: 0</pre><p>Antes del extras.mjs, la cuenta era 4. La suma de HTML: 3 cupos en of-101 y 0 en of-102.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "pratica",
+      "titulo": "Práctica",
+      "sub": "Modo nativo; cámbialo por polyfill si quieres comparar. Cada ejercicio termina con un listo cuando.",
+      "exercicios": [
+        {
+          "id": "e1",
+          "titulo": "E1 · Llamar la búsqueda",
+          "min": "5 min",
+          "texto": "Ejecuta listar y executar. Cambia el tema a html y luego a cobol, y compara.",
+          "pronto": "<code>node scripts/executar.mjs nativo buscar_oficinas '{\"tema\":\"webmcp\",\"apenasComVaga\":true}'</code> → <code>resultado (string): {\"total\":1,</code> y <code>saída: 0</code>; con cobol → <code>{\"erro\":\"tema inválido: cobol\"}</code>."
+        },
+        {
+          "id": "e2",
+          "titulo": "E2 · contar_vagas en el kit",
+          "min": "10 min",
+          "texto": "Pega la lista de contar_vagas en kit/pagina/extras.mjs (dentro del return [ ]).",
+          "pronto": "<code>node scripts/listar.mjs nativo | tail -1</code> → <code>5 ferramentas registradas</code> (antes: 4)."
+        },
+        {
+          "id": "e3",
+          "titulo": "E3 · Una herramienta tuya",
+          "min": "15 min",
+          "texto": "Escribe otra herramienta de solo lectura en extras.mjs, por ejemplo proxima_oficina (la de fecha más cercana). Nombre con _, descripción que diga lo que no hace, schema cerrado.",
+          "pronto": "<code>node scripts/executar.mjs nativo [nome] '{}'</code> → <code>resultado (string):</code> con el JSON esperado y <code>saída: 0</code>."
+        }
+      ]
+    },
+    {
+      "tipo": "quiz",
+      "titulo": "Prueba de la clase",
+      "sub": "La explicación aparece después de la respuesta.",
+      "perguntas": [
+        {
+          "p": "¿Qué devuelve executeTool en la spec del 16/10/2026?",
+          "opcoes": [
+            "Una Promise de texto JSON con el resultado.",
+            "El objeto que devolvió el execute, sin cambios.",
+            "Una Promise vacía; el resultado va a un evento.",
+            "Un RegisteredTool actualizado con el resultado."
+          ],
+          "certa": 0,
+          "explica": "executeTool devuelve Promise<DOMString>: el navegador serializa el retorno del execute en JSON. Quien llama hace JSON.parse, como el testar.mjs.",
+          "ref": "codigo"
+        },
+        {
+          "p": "¿Qué nombre de herramienta rechaza registerTool?",
+          "opcoes": [
+            "buscar_oficinas",
+            "oficinas.buscar",
+            "buscar oficinas",
+            "buscar-oficinas-v2"
+          ],
+          "certa": 2,
+          "explica": "El nombre acepta de 1 a 128 caracteres: letras y números ASCII, _ - y punto. El espacio no entra, y el registro lo rechaza con InvalidStateError.",
+          "ref": "diagrama"
+        },
+        {
+          "p": "¿Por qué la búsqueda del kit llama a ui.mostrarResultados dentro del execute?",
+          "opcoes": [
+            "Porque el navegador exige tocar el DOM.",
+            "Para que la persona vea el mismo estado que recibió el agente.",
+            "Para que el agente lea la pantalla en vez del JSON.",
+            "Porque getTools solo lista herramientas visuales."
+          ],
+          "certa": 1,
+          "explica": "Agente y persona trabajan en la misma página. Si el agente busca y la pantalla no cambia, la persona pierde el hilo. La spec no lo obliga; es una decisión de diseño del kit.",
+          "ref": "codigo"
+        },
+        {
+          "p": "Un tutorial manda llamar executeTool(t, JSON.stringify(entrada)). ¿Qué pasa en Chromium 156?",
+          "opcoes": [
+            "Funciona: el navegador acepta texto y objeto.",
+            "Funciona solo en el polyfill, pero Chromium nativo rechaza la llamada.",
+            "Funciona, pero el resultado vuelve como objeto.",
+            "Da TypeError: la entrada tiene que ser un objeto."
+          ],
+          "certa": 3,
+          "explica": "La entrada es object en la spec. El rodeo con texto era de una implementación de septiembre y hoy da TypeError en el nativo y en el polyfill (medido el 19/10/2026).",
+          "ref": "codigo"
+        }
+      ]
+    },
+    {
+      "tipo": "resumo",
+      "titulo": "En tres frases",
+      "itens": [
+        {
+          "t": "Definición",
+          "texto": "name con regla, description clara, inputSchema cerrado y execute que devuelve un objeto."
+        },
+        {
+          "t": "Llamada",
+          "texto": "getTools lista; executeTool recibe un objeto y devuelve texto JSON."
+        },
+        {
+          "t": "En la pantalla",
+          "texto": "El execute usa la misma regla del formulario y le muestra a la persona lo que recibió el agente."
+        }
+      ]
+    },
+    {
+      "tipo": "links",
+      "titulo": "Para ir más allá",
+      "links": [
+        {
+          "t": "Spec: interface ModelContext y ModelContextTool",
+          "href": "https://webmachinelearning.github.io/webmcp/",
+          "icone": "arquivo"
+        },
+        {
+          "t": "README de WebMCP (ejemplos y tipos)",
+          "href": "https://github.com/webmachinelearning/webmcp",
+          "icone": "git"
+        },
+        {
+          "t": "Curso 1: servidor MCP (el mismo diseño de tool, en el servidor)",
+          "href": "https://inematds.github.io/formacao-webmcp-mcp-v72/es/",
+          "icone": "camadas"
+        }
+      ]
+    }
+  ]
+}

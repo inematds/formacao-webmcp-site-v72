@@ -137,7 +137,7 @@
     {
       "tipo": "pratica",
       "titulo": "Prática",
-      "sub": "Modo nativo; troque por polyfill se quiser comparar.",
+      "sub": "Modo nativo; troque por polyfill se quiser comparar. Cada exercício termina num pronto quando.",
       "exercicios": [
         {
           "id": "e1",
@@ -207,7 +207,7 @@
           "p": "Um tutorial manda chamar executeTool(t, JSON.stringify(entrada)). O que acontece no Chromium 156?",
           "opcoes": [
             "Funciona: o navegador aceita texto e objeto.",
-            "Funciona só no polyfill, não no nativo.",
+            "Funciona só no polyfill, mas o Chromium nativo recusa a chamada.",
             "Funciona, mas o resultado volta como objeto.",
             "Dá TypeError: a entrada tem de ser objeto."
           ],

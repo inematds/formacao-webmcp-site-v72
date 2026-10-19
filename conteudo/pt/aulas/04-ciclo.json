@@ -143,7 +143,7 @@
     {
       "tipo": "pratica",
       "titulo": "Prática",
-      "sub": "Ensaio nos dois modos com API.",
+      "sub": "Ensaio nos dois modos com API. Cada exercício termina num pronto quando.",
       "exercicios": [
         {
           "id": "e1",
@@ -177,7 +177,7 @@
           "p": "Como se remove uma ferramenta na spec de 16/10/2026?",
           "opcoes": [
             "Chamando unregisterTool(nome) no modelContext.",
-            "Registrando de novo com description vazia.",
+            "Registrando a mesma ferramenta de novo, agora com a description vazia.",
             "Chamando clearContext() e registrando o resto.",
             "Abortando o AbortController passado no registro."
           ],
@@ -201,7 +201,7 @@
           "p": "Seu teste espera toolactivated e roda só no polyfill 6.0.3. O que acontece?",
           "opcoes": [
             "Passa: o polyfill dispara os mesmos eventos.",
-            "Passa, mas com outro nome de evento.",
+            "Passa, mas o evento chega com outro nome e o teste precisa mudar.",
             "Falha: o polyfill não dispara toolactivated.",
             "Falha: o polyfill não dispara toolchange."
           ],
@@ -213,7 +213,7 @@
           "p": "Num componente React, onde vai o abort()?",
           "opcoes": [
             "No cleanup do efeito que registrou.",
-            "No onClick do botão de enviar.",
+            "No onClick do botão de enviar, logo depois de gravar o formulário.",
             "Em lugar nenhum: o navegador limpa sozinho.",
             "No construtor, antes de registrar."
           ],

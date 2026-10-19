@@ -164,7 +164,7 @@
     {
       "tipo": "pratica",
       "titulo": "Prática",
-      "sub": "Validador e o plano do seu site.",
+      "sub": "Validador e o plano do seu site. Cada exercício termina num pronto quando.",
       "exercicios": [
         {
           "id": "e1",

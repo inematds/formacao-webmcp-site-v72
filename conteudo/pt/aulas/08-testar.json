@@ -164,7 +164,7 @@
     {
       "tipo": "pratica",
       "titulo": "Prática",
-      "sub": "A bateria verde, a quebra pega e o seu plano.",
+      "sub": "A bateria verde, a quebra pega e o seu plano. Cada exercício termina num pronto quando.",
       "exercicios": [
         {
           "id": "e1",
@@ -252,7 +252,7 @@
           "opcoes": [
             "As 4 ferramentas do kit registradas.",
             "A tela mostra o que o agente recebeu.",
-            "Sem rolagem horizontal em 390 px.",
+            "Sem rolagem horizontal em 390 px, no celular e no modo nativo.",
             "Reserva recusada na tela não reserva."
           ],
           "certa": 3,
@@ -263,7 +263,7 @@
           "p": "Por que a bateria compara a ferramenta com o formulário?",
           "opcoes": [
             "Para medir qual dos dois é mais rápido.",
-            "Para o agente aprender com o formulário.",
+            "Para o agente aprender com o formulário e repetir o caminho da pessoa.",
             "Para provar que os dois caminhos dão o mesmo resultado.",
             "Porque o polyfill só funciona com formulário."
           ],
@@ -287,7 +287,7 @@
           "p": "A spec ganhou uma data nova. Primeiro passo?",
           "opcoes": [
             "Rodar a bateria e ler o que mudou na spec.",
-            "Remover as ferramentas até o Chrome estabilizar.",
+            "Remover todas as ferramentas da página até o Chrome lançar a versão estável.",
             "Trocar document por navigator nos exemplos.",
             "Esperar o fim do origin trial no Chrome 156."
           ],

@@ -1,0 +1,350 @@
+{
+  "slug": "testar",
+  "num": 8,
+  "menu": "Test",
+  "titulo": "Test it yourself: run the suite in all three modes, checklist and plan",
+  "titulo_curto": "Test suite, checklist and plan",
+  "minutos": 18,
+  "lead": "A tool is only ready when a test proves it works and that the page stays the same without it. The kit's test suite runs with no model in all three modes, compares tool with form, and tests the confirmation and the cleanup. In this lesson you run it, watch a break get caught and leave with a dated plan for your site.",
+  "objetivo": "run the automatic test suite in all three modes, watch a break get caught and leave with the checklist and the dated plan for your page.",
+  "competencias": [
+    "rodar-bateria-automatica",
+    "provocar-e-pegar-regressao",
+    "planejar-a-adocao"
+  ],
+  "aprende": [
+    {
+      "icone": "check",
+      "t": "What the suite checks in each mode"
+    },
+    {
+      "icone": "x",
+      "t": "A dangerous \"optimization\" and the test that catches it"
+    },
+    {
+      "icone": "lista",
+      "t": "The checklist before you publish"
+    },
+    {
+      "icone": "calendario",
+      "t": "The dated plan for your site"
+    }
+  ],
+  "hero_alt": "Dark workbench with a laptop running a terminal and an industrial humanoid robot with a black visor watching a second monitor with a browser.",
+  "secoes": [
+    {
+      "tipo": "mapa",
+      "titulo": "The course map",
+      "sub": "Four steps and what each one delivers. Click an exercise to see the \"done when\".",
+      "degraus": [
+        {
+          "aula": "ambiente",
+          "icone": "terminal",
+          "quando": "Day 1",
+          "titulo": "Kit and modes",
+          "sub": "sem, polyfill, nativo",
+          "saida": "The same page in all three modes, at no cost.",
+          "passo": "The base: kit installed, secure context and the certainty that the Sem mode (no API) works."
+        },
+        {
+          "aula": "primeira",
+          "icone": "caneta",
+          "quando": "Day 1",
+          "titulo": "Tools",
+          "sub": "register and call",
+          "saida": "A tool of your own, called by executeTool.",
+          "passo": "Requires step 1. Definition, registration with detection and the result as JSON text."
+        },
+        {
+          "aula": "anotacoes",
+          "icone": "portao",
+          "quando": "Day 2",
+          "titulo": "Confirmation",
+          "sub": "annotations and gate",
+          "saida": "Every action with an effect behind Confirmar.",
+          "passo": "Requires step 2. Correct annotations, third-party text as data and the person deciding."
+        },
+        {
+          "aula": "testar",
+          "icone": "check",
+          "quando": "Day 3",
+          "titulo": "Test suite",
+          "sub": "three modes",
+          "saida": "An automatic test that catches a break before your visitor does.",
+          "passo": "Requires all three. The suite green, a deliberate break and the plan for your site."
+        }
+      ],
+      "resultado": {
+        "titulo": "At the end of the course",
+        "texto": "A page with WebMCP tools, identical without the API, with confirmation and an automatic test suite.",
+        "total": "22 exercises"
+      },
+      "legenda": "Lifecycle, form and catalog (lessons 4, 6 and 7) go into the generator below."
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "The full test suite",
+      "sub": "First the rule tests (node --test, no browser), then testar.mjs in all three modes. No model calls.",
+      "blocos": [
+        {
+          "rot": "Terminal · test suite",
+          "icone": "terminal",
+          "conteudo": "cd ~/projetos/formacao-webmcp-site-v72/kit\nnode --test 2>&1 | grep -E \"^ℹ (pass|fail)\"\nnode scripts/testar.mjs; echo \"saída: $?\""
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Captured output (October 19, 2026)",
+            "html": "<pre>ℹ pass 4\nℹ fail 0\n== sem\n   Chromium 156.0.8078.4 (Playwright)\nok    [sem] página sem erro de JavaScript\nok    [sem] sem rolagem horizontal em 390 px\nok    [sem] estado WebMCP esperado (sem) · sem\nok    [sem] busca pelo formulário funciona · of-301\nok    [sem] reserva pelo formulário funciona\n== polyfill\nok    [polyfill] página sem erro de JavaScript\nok    [polyfill] sem rolagem horizontal em 390 px\nok    [polyfill] estado WebMCP esperado (com) · com\nok    [polyfill] busca pelo formulário funciona · of-301\nok    [polyfill] reserva pelo formulário funciona\nok    [polyfill] as 4 ferramentas do kit registradas · buscar_oficinas, listar_comentarios, minhas_reservas, reservar_vaga\nok    [polyfill] ferramenta devolve o mesmo que o formulário · of-301\nok    [polyfill] a tela mostra o que o agente recebeu · of-301\nok    [polyfill] reserva recusada na tela não reserva\nok    [polyfill] reserva confirmada aparece na tela\nok    [polyfill] entrada inválida volta erro legível, sem mudar nada · tema inválido: cobol\nok    [polyfill] ao sair da página as ferramentas saem (AbortSignal) · 0 restantes, toolchange 4x, getTools depois: NotAllowedError\nok    [polyfill] nenhum erro de JavaScript na sessão do agente\n== nativo\nok    [nativo] página sem erro de JavaScript\nok    [nativo] sem rolagem horizontal em 390 px\nok    [nativo] estado WebMCP esperado (com) · com\nok    [nativo] busca pelo formulário funciona · of-301\nok    [nativo] reserva pelo formulário funciona\nok    [nativo] as 4 ferramentas do kit registradas · buscar_oficinas, listar_comentarios, minhas_reservas, reservar_vaga\nok    [nativo] ferramenta devolve o mesmo que o formulário · of-301\nok    [nativo] a tela mostra o que o agente recebeu · of-301\nok    [nativo] reserva recusada na tela não reserva\nok    [nativo] reserva confirmada aparece na tela\nok    [nativo] entrada inválida volta erro legível, sem mudar nada · tema inválido: cobol\nok    [nativo] ao sair da página as ferramentas saem (AbortSignal) · 0 restantes, toolchange 4x\nok    [nativo] nenhum erro de JavaScript na sessão do agente\nBATERIA: 31/31 ok\nsaída: 0</pre><p>In the polyfill, getTools after pagehide gives NotAllowedError: it shuts the whole API off. The test accepts both ways of \"leaving\": zero tools and toolchange fired.</p>"
+          },
+          {
+            "rot": "Common mistake: booking without waiting",
+            "html": "<pre>FALHA [nativo] reserva recusada na tela não reserva\nBATERIA: 12/13 ok\nsaída: 1</pre><p>Someone replaces the wait for the click with <code>const ok = true</code> to \"speed things up\". The test suite fails on \"reserva recusada na tela não reserva\" and exits with 1. That is what it is for.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "Cause the break",
+      "sub": "The rehearsal copies the page, makes the dangerous swap in the copy and runs the test suite in native mode only.",
+      "blocos": [
+        {
+          "rot": "Terminal · provoked break",
+          "icone": "x",
+          "conteudo": "cd ~/projetos/formacao-webmcp-site-v72/kit\nE=${TMPDIR:-/tmp}/ensaio-webmcp-site/a8; rm -rf $E; mkdir -p $E; cp -r pagina/. $E/\n# the dangerous \"optimization\": booking without waiting for the person\nsed -i 's/const ok = await ui.pedirConfirmacao({ oficina, nome }, signal);/const ok = true;/' $E/ferramentas.mjs\nPAGINA=$E node scripts/testar.mjs nativo | grep -E \"FALHA|BATERIA\"; echo \"saída: ${PIPESTATUS[0]}\""
+        }
+      ]
+    },
+    {
+      "tipo": "passos",
+      "titulo": "Checklist before you publish",
+      "sub": "Dated: 10/19/2026, spec from 10/16/2026.",
+      "passos": [
+        {
+          "titulo": "Fallback",
+          "sub": "sem mode",
+          "texto": [
+            "The site works the same without document.modelContext.",
+            "No polyfill in production: it is only for the rehearsal."
+          ]
+        },
+        {
+          "titulo": "Catalog",
+          "sub": "validator",
+          "texto": [
+            "validar-catalogo.mjs with 0 errors.",
+            "Each tool has one intent and the right annotation."
+          ]
+        },
+        {
+          "titulo": "Effect",
+          "sub": "confirmation",
+          "texto": [
+            "Every tool with consequentialHint waits for the person.",
+            "Battery with the \"decline\" case passing."
+          ]
+        },
+        {
+          "titulo": "Date",
+          "sub": "spec and trial",
+          "texto": [
+            "A comment with the spec date in the tools file.",
+            "Origin trial token with the end date (Chrome 156) in your calendar."
+          ],
+          "exemplo": {
+            "rot": "Reminder",
+            "texto": "When the spec changes date, run the battery and reread what changed."
+          }
+        }
+      ]
+    },
+    {
+      "tipo": "pratica",
+      "titulo": "Practice",
+      "sub": "The green battery, the break that gets caught, and your plan. Each exercise ends with a done when.",
+      "exercicios": [
+        {
+          "id": "e1",
+          "titulo": "E1 · Green battery",
+          "min": "5 min",
+          "texto": "Run the full battery.",
+          "pronto": "<code>node scripts/testar.mjs; echo \"saída: $?\"</code> → <code>BATERIA: 31/31 ok</code> and <code>saída: 0</code>."
+        },
+        {
+          "id": "e2",
+          "titulo": "E2 · Catch the break",
+          "min": "5 min",
+          "texto": "Run the provoked-break rehearsal and read the line that failed.",
+          "pronto": "The block prints <code>FALHA [nativo] reserva recusada na tela não reserva</code>, <code>BATERIA: 12/13 ok</code> and <code>saída: 1</code>."
+        },
+        {
+          "id": "e3",
+          "titulo": "E3 · Dated plan",
+          "min": "10 min",
+          "texto": "Generate the plan below with your start date and the hours you have. Write into it the 3 tools from your catalog (lesson 7) and the date when you will run the battery again.",
+          "pronto": "You downloaded the plan (.md or .ics) and it has the battery retest date."
+        }
+      ]
+    },
+    {
+      "tipo": "gerador",
+      "titulo": "Generate your plan with dates",
+      "sub": "Pick the start date and how much time you have per week.",
+      "curso": "WebMCP on your site",
+      "horas_padrao": 4,
+      "degraus": [
+        {
+          "titulo": "Lesson 1 · WebMCP today",
+          "aula": "hoje"
+        },
+        {
+          "titulo": "Lesson 2 · Environment and three modes",
+          "aula": "ambiente"
+        },
+        {
+          "titulo": "Lesson 3 · First tool",
+          "aula": "primeira"
+        },
+        {
+          "titulo": "Lesson 4 · Lifecycle",
+          "aula": "ciclo"
+        },
+        {
+          "titulo": "Lesson 5 · Annotations and confirmation",
+          "aula": "anotacoes"
+        },
+        {
+          "titulo": "Lesson 6 · Form as a tool",
+          "aula": "formulario"
+        },
+        {
+          "titulo": "Lesson 7 · Catalog and migration",
+          "aula": "catalogo"
+        },
+        {
+          "titulo": "Lesson 8 · Battery and plan",
+          "aula": "testar"
+        }
+      ],
+      "txt": {
+        "titulo": "Plan — WebMCP on your site",
+        "inicio": "Start",
+        "ritmo": "Pace",
+        "termino": "Expected finish",
+        "ate": "by",
+        "pronto": "done when",
+        "semanas": "weeks",
+        "travou": "## What got stuck and the rule I created",
+        "h": "h per week",
+        "exs": "exercises"
+      }
+    },
+    {
+      "tipo": "quiz",
+      "titulo": "Lesson quiz",
+      "sub": "The explanation appears after your answer.",
+      "perguntas": [
+        {
+          "p": "Which check catches swapping the confirmation for const ok = true?",
+          "opcoes": [
+            "The kit's 4 tools are registered.",
+            "The screen shows what the agent received.",
+            "No horizontal scrolling at 390 px, on the phone and in native mode.",
+            "A booking declined on screen does not book."
+          ],
+          "certa": 3,
+          "explica": "Without the wait, the booking happens even when the person declines. The other checks stay green: that is why the \"decline\" case has to exist.",
+          "ref": "codigo"
+        },
+        {
+          "p": "Why does the battery compare the tool with the form?",
+          "opcoes": [
+            "To measure which of the two is faster.",
+            "So the agent can learn from the form and repeat the person's path.",
+            "To prove that both paths give the same result.",
+            "Because the polyfill only works with a form."
+          ],
+          "certa": 2,
+          "explica": "The agent and the person follow the same rule. If they diverge, one of the two is wrong, and the visitor without the API sees something different.",
+          "ref": "codigo"
+        },
+        {
+          "p": "Where does the polyfill go on the published site?",
+          "opcoes": [
+            "In the head of every page, before the app.",
+            "Nowhere: it is only for rehearsal.",
+            "Only on pages with a declarative form.",
+            "Only for people using Safari or Firefox."
+          ],
+          "certa": 1,
+          "explica": "The polyfill is for rehearsal, unofficial, and temporary. In production, whoever has the API (trial or flag) uses the native one; everyone else uses the form.",
+          "ref": "passos"
+        },
+        {
+          "p": "The spec got a new date. First step?",
+          "opcoes": [
+            "Run the battery and read what changed in the spec.",
+            "Remove all the tools from the page until Chrome ships the stable version.",
+            "Swap document for navigator in the examples.",
+            "Wait for the origin trial to end in Chrome 156."
+          ],
+          "certa": 0,
+          "explica": "Battery first, then read what changed: it's the same path that swapped navigator for document in May. Never go back to the old name.",
+          "ref": "passos"
+        }
+      ]
+    },
+    {
+      "tipo": "resumo",
+      "titulo": "In three sentences",
+      "itens": [
+        {
+          "t": "Test suite",
+          "texto": "Three modes, tool identical to the form, confirmation, invalid input, and removal."
+        },
+        {
+          "t": "Break",
+          "texto": "The \"decline\" case catches anyone who removes the confirmation to speed things up."
+        },
+        {
+          "t": "Plan",
+          "texto": "A dated checklist and a retest scheduled for when the spec changes."
+        }
+      ]
+    },
+    {
+      "tipo": "links",
+      "titulo": "To go further",
+      "links": [
+        {
+          "t": "Next course: browser agents, testing the site the way the agent sees it",
+          "href": "https://inematds.github.io/formacao-webmcp-navegador-v72/en/",
+          "icone": "robo"
+        },
+        {
+          "t": "Course 4: security and trust between site and agent",
+          "href": "https://inematds.github.io/formacao-webmcp-seguranca-v72/en/",
+          "icone": "cadeado"
+        },
+        {
+          "t": "Evals and in-depth verification (LOOP-R Engineering Track)",
+          "href": "https://inematds.github.io/loop-r-eng-verificacao-v72/en/",
+          "icone": "check"
+        },
+        {
+          "t": "Outside-in diagnosis: WebMCP Readiness",
+          "href": "https://webmcp.inema.pro/",
+          "icone": "lupa"
+        },
+        {
+          "t": "WebMCP area in Eventos",
+          "href": "https://eventos.inema.pro/webmcp/",
+          "icone": "camadas"
+        }
+      ]
+    }
+  ]
+}

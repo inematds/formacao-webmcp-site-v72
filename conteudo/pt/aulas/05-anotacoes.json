@@ -194,7 +194,7 @@
     {
       "tipo": "pratica",
       "titulo": "Prática",
-      "sub": "Modo nativo.",
+      "sub": "Modo nativo. Cada exercício termina num pronto quando.",
       "exercicios": [
         {
           "id": "e1",
@@ -230,7 +230,7 @@
             "consequentialHint, porque avaliação influencia compra.",
             "untrustedContentHint, porque o texto é de terceiros.",
             "debugging, porque o conteúdo não é do site.",
-            "Nenhuma: avaliação é conteúdo público."
+            "Nenhuma, porque avaliação de cliente já é conteúdo público do site."
           ],
           "certa": 1,
           "explica": "A saída traz texto que a página não controla. untrustedContentHint avisa o agente para tratar como dado. É também readOnly, já que só lê.",

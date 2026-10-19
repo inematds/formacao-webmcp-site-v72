@@ -1,0 +1,220 @@
+{
+  "slug": "formulario",
+  "num": 6,
+  "menu": "Form",
+  "titulo": "Form as a tool: toolname and toolautosubmit (experimental, outside the spec)",
+  "titulo_curto": "Form as a tool",
+  "minutos": 14,
+  "lead": "Chrome lets a form become a tool with three HTML attributes. It's the shortest path for anyone who already has a well-labeled form, but it was left out of the 10/16/2026 spec: it exists in Chrome's origin trial and in a temporary layer of the polyfill. In this lesson you use it with that label and decide when the form can submit itself.",
+  "objetivo": "turn a form into a tool with toolname, knowing it's experimental and outside the spec, and decide when to use toolautosubmit.",
+  "competencias": [
+    "marcar-formulario-como-ferramenta",
+    "decide-auto-submit",
+    "reply-to-the-agent-with-respondWith"
+  ],
+  "aprende": [
+    {
+      "icone": "arquivo",
+      "t": "toolname, tooldescription, and toolparamdescription"
+    },
+    {
+      "icone": "lista",
+      "t": "The schema the browser builds from the fields"
+    },
+    {
+      "icone": "portao",
+      "t": "toolautosubmit only for what only reads"
+    },
+    {
+      "icone": "enviar",
+      "t": "agentInvoked and respondWith on submit"
+    }
+  ],
+  "hero_alt": "Dark monitor with an abstract web form and, in front of it, a clipboard with a blank paper form.",
+  "secoes": [
+    {
+      "tipo": "diagrama",
+      "titulo": "From form to tool",
+      "sub": "Experimental as of 10/19/2026, outside the spec. Click each step.",
+      "nos": [
+        {
+          "icone": "arquivo",
+          "titulo": "Form",
+          "sub": "attributes",
+          "detalhe": "toolname and tooldescription on the form; toolparamdescription on the fields (without it, Chrome uses the label). Removing toolname or tooldescription unregisters the tool."
+        },
+        {
+          "icone": "lista",
+          "titulo": "Schema",
+          "sub": "the browser builds it",
+          "detalhe": "The field's name becomes a property; required, select, and type become JSON Schema rules. A clear label helps both the person and the agent."
+        },
+        {
+          "icone": "robo",
+          "titulo": "Agent fills in",
+          "sub": "toolactivated",
+          "detalhe": "The browser brings the form into focus and fills in the fields, in plain view of the person. The CSS :tool-form-active marks the active form."
+        },
+        {
+          "icone": "portao",
+          "titulo": "Who submits?",
+          "sub": "autosubmit or person",
+          "forte": true,
+          "detalhe": "With toolautosubmit, submission is automatic. Without it, the form waits for the person to click. On submit, e.agentInvoked tells you whether it came from the agent, and e.respondWith(promise) returns the result."
+        }
+      ],
+      "legenda": "WebMCP README: \"Future Exploration… not part of the specification at this time\". Chrome documents it and implements it in the trial (page updated on 09/25/2026).",
+      "dica": "Use the imperative API (lessons 3 to 5) as your base. The declarative form is an extra: if it goes away, the form is still just a form."
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "Two forms: one submits itself, the other waits",
+      "sub": "Excerpt from kit/pagina/declarativa.html. The search only reads and can use toolautosubmit; the booking has an effect and waits for the click.",
+      "blocos": [
+        {
+          "rot": "Excerpt · kit/pagina/declarativa.html (HTML)",
+          "icone": "arquivo",
+          "conteudo": "<!-- Só lê: pode enviar sozinho (toolautosubmit). -->\n<form id=\"f-busca\" toolname=\"buscar_oficinas_form\" tooldescription=\"Busca oficinas da agenda por tema. Só lê.\" toolautosubmit>\n  <label for=\"d-tema\">Tema</label>\n  <select id=\"d-tema\" name=\"tema\" required toolparamdescription=\"Tema da oficina.\">\n    <option value=\"html\">HTML</option><option value=\"javascript\">JavaScript</option>\n    <option value=\"webmcp\">WebMCP</option><option value=\"mcp\">MCP</option>\n  </select>\n  <button type=\"submit\">Buscar</button>\n</form>\n\n<!-- Tem efeito: SEM toolautosubmit. O agente preenche, a pessoa clica em Reservar. -->\n<form id=\"f-reserva\" toolname=\"reservar_vaga_form\" tooldescription=\"Preenche a reserva de uma vaga. Quem envia é a pessoa, clicando em Reservar.\">\n  <label for=\"d-id\">Oficina (id)</label>\n  <input id=\"d-id\" name=\"id\" required pattern=\"of-[0-9]{3}\" toolparamdescription=\"Id da oficina, ex.: of-301.\">\n  <label for=\"d-nome\">Seu nome</label>\n  <input id=\"d-nome\" name=\"nome\" required minlength=\"2\">\n  <button type=\"submit\">Reservar</button>\n</form>"
+        },
+        {
+          "rot": "Excerpt · kit/pagina/declarativa.html (submit)",
+          "icone": "arquivo",
+          "conteudo": "$('#f-busca').addEventListener('submit', e => {\n  e.preventDefault();\n  const lista = agenda.buscar({ tema: $('#d-tema').value });\n  $('#d-resultados').replaceChildren(...lista.map(o => Object.assign(document.createElement('li'), { textContent: `${o.id} · ${o.titulo}` })));\n  if (e.agentInvoked) e.respondWith(Promise.resolve({ total: lista.length, ids: lista.map(o => o.id) }));\n});"
+        },
+        {
+          "rot": "Terminal · native and polyfill",
+          "icone": "terminal",
+          "conteudo": "cd ~/projetos/formacao-webmcp-site-v72/kit\nnode scripts/declarativa.mjs nativo; echo \"saída: $?\"\nnode scripts/declarativa.mjs polyfill; echo \"saída: $?\""
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Captured output (October 19, 2026)",
+            "html": "<pre>== Chromium 156.0.8078.4 (Playwright) · modo: nativo\nferramenta do formulário: buscar_oficinas_form · campos: tema\nferramenta do formulário: reservar_vaga_form · campos: id, nome\nbuscar_oficinas_form (toolautosubmit): {\"total\":1,\"ids\":[\"of-301\"]}\nreservar_vaga_form preencheu: id=of-301 nome=Rita · enviado? não, esperando a pessoa\npessoa clicou em Reservar → {\"reservado\":true,\"reserva\":{\"id\":\"of-301\",\"nome\":\"Rita\",\"titulo\":\"Primeira ferramenta WebMCP\"}}\nsaída: 0\n== Chromium 156.0.8078.4 (Playwright) · modo: polyfill\nferramenta do formulário: buscar_oficinas_form · campos: tema\nferramenta do formulário: reservar_vaga_form · campos: id, nome\nbuscar_oficinas_form (toolautosubmit): {\"total\":1,\"ids\":[\"of-301\"]}\nreservar_vaga_form preencheu: id=of-301 nome=Rita · enviado? não, esperando a pessoa\npessoa clicou em Reservar → {\"reservado\":true,\"reserva\":{\"id\":\"of-301\",\"nome\":\"Rita\",\"titulo\":\"Primeira ferramenta WebMCP\"}}\nsaída: 0</pre><p>The search returns right away (toolautosubmit). The booking stays filled in and paused until the click: declarativa.mjs plays the part of the person.</p>"
+          },
+          {
+            "rot": "Common mistake: toolautosubmit on everything",
+            "html": "<p>With <code>toolautosubmit</code> on the booking form, the agent fills it in and submits it without the person seeing. Save automatic submission for what only reads. And remember: <code>respondWith</code> requires <code>preventDefault()</code> first, otherwise the browser goes ahead with the normal submission.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "pratica",
+      "titulo": "Practice",
+      "sub": "Native and polyfill. Each exercise ends with a done when.",
+      "exercicios": [
+        {
+          "id": "e1",
+          "titulo": "E1 · The two forms",
+          "min": "4 min",
+          "texto": "Run the block and compare the search and booking lines.",
+          "pronto": "<code>node scripts/declarativa.mjs nativo</code> → <code>enviado? não, esperando a pessoa</code> and <code>pessoa clicou em Reservar → {\"reservado\":true,</code> and <code>saída: 0</code>."
+        },
+        {
+          "id": "e2",
+          "titulo": "E2 · A form of your own",
+          "min": "15 min",
+          "texto": "Take a search form from your site (read-only), add toolname, tooldescription, and toolparamdescription to a local copy. Leave a comment in the HTML: experimental, outside the spec, date.",
+          "pronto": "<code>PAGINA=[your folder] node scripts/listar.mjs nativo [file].html</code> → the line with your toolname; in <code>sem</code> mode, the form submits as before. The comment with the date is in the HTML."
+        }
+      ]
+    },
+    {
+      "tipo": "quiz",
+      "titulo": "Lesson quiz",
+      "sub": "The explanation appears after your answer.",
+      "perguntas": [
+        {
+          "p": "What is the status of the declarative API (toolname) as of 10/19/2026?",
+          "opcoes": [
+            "It is part of the 10/16/2026 spec along with registerTool.",
+            "It was removed from Chrome along with navigator.modelContext.",
+            "It is outside the spec; Chrome implements it in the origin trial.",
+            "It is already a W3C standard, only Safari is left to implement it."
+          ],
+          "certa": 2,
+          "explica": "The README says it is future exploration, outside the spec. Chrome documents it and implements it in the trial. That is why the course puts the \"experimental, outside the spec\" badge on it.",
+          "ref": "diagrama"
+        },
+        {
+          "p": "When should you use toolautosubmit?",
+          "opcoes": [
+            "On every form, so the agent doesn't get stuck.",
+            "Only on forms with more than three fields.",
+            "Never: Chrome removed the attribute in version 156.",
+            "On a form that only reads, like a search."
+          ],
+          "certa": 3,
+          "explica": "Auto-submit takes the person out of the loop. For a search, that's fine; for a booking, the form should wait for the click.",
+          "ref": "codigo"
+        },
+        {
+          "p": "How does the submit know the agent filled in the form?",
+          "opcoes": [
+            "Through the e.agentInvoked property of the SubmitEvent.",
+            "Through the User-Agent header of the request.",
+            "Through a hidden field the browser creates.",
+            "Through the toolchange event fired earlier."
+          ],
+          "certa": 0,
+          "explica": "SubmitEvent gains agentInvoked (true when it came from the agent) and respondWith(promise) to return the result, after preventDefault().",
+          "ref": "codigo"
+        },
+        {
+          "p": "With no toolparamdescription on a field, where does Chrome get the description?",
+          "opcoes": [
+            "From the field's placeholder attribute.",
+            "From the label associated with the field.",
+            "From the text of the submit button.",
+            "From nowhere: the field is left with no description."
+          ],
+          "certa": 1,
+          "explica": "According to the Chrome docs (09/25/2026), with no toolparamdescription the browser uses the associated label; with no label, the aria-description. A well-labeled form already helps.",
+          "ref": "diagrama"
+        }
+      ]
+    },
+    {
+      "tipo": "resumo",
+      "titulo": "In three sentences",
+      "itens": [
+        {
+          "t": "Outside the spec",
+          "texto": "toolname/tooldescription/toolautosubmit exist in Chrome in trial, not in the 10/16/2026 spec."
+        },
+        {
+          "t": "Who submits",
+          "texto": "toolautosubmit only on what only reads; everything else waits for the person's click."
+        },
+        {
+          "t": "Foundation",
+          "texto": "The imperative API is the foundation; the declarative form is an extra and keeps working without the API."
+        }
+      ]
+    },
+    {
+      "tipo": "links",
+      "titulo": "To go further",
+      "links": [
+        {
+          "t": "Chrome for Developers: declarative API",
+          "href": "https://developer.chrome.com/docs/ai/webmcp/declarative-api",
+          "icone": "arquivo"
+        },
+        {
+          "t": "Declarative API explainer (outside the spec)",
+          "href": "https://github.com/webmachinelearning/webmcp/blob/main/declarative-api-explainer.md",
+          "icone": "git"
+        },
+        {
+          "t": "Course 0: semantic HTML and a well-labeled form",
+          "href": "https://inematds.github.io/formacao-webmcp-base-v72/en/",
+          "icone": "camadas"
+        }
+      ]
+    }
+  ]
+}
