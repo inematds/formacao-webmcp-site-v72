@@ -1,0 +1,39 @@
+ℹ pass 4
+ℹ fail 0
+== sem
+   Chromium 156.0.8078.4 (Playwright)
+ok    [sem] página sem erro de JavaScript
+ok    [sem] sem rolagem horizontal em 390 px
+ok    [sem] estado WebMCP esperado (sem) · sem
+ok    [sem] busca pelo formulário funciona · of-301
+ok    [sem] reserva pelo formulário funciona
+== polyfill
+ok    [polyfill] página sem erro de JavaScript
+ok    [polyfill] sem rolagem horizontal em 390 px
+ok    [polyfill] estado WebMCP esperado (com) · com
+ok    [polyfill] busca pelo formulário funciona · of-301
+ok    [polyfill] reserva pelo formulário funciona
+ok    [polyfill] as 4 ferramentas do kit registradas · buscar_oficinas, listar_comentarios, minhas_reservas, reservar_vaga
+ok    [polyfill] ferramenta devolve o mesmo que o formulário · of-301
+ok    [polyfill] a tela mostra o que o agente recebeu · of-301
+ok    [polyfill] reserva recusada na tela não reserva
+ok    [polyfill] reserva confirmada aparece na tela
+ok    [polyfill] entrada inválida volta erro legível, sem mudar nada · tema inválido: cobol
+ok    [polyfill] ao sair da página as ferramentas saem (AbortSignal) · 0 restantes, toolchange 4x, getTools depois: NotAllowedError
+ok    [polyfill] nenhum erro de JavaScript na sessão do agente
+== nativo
+ok    [nativo] página sem erro de JavaScript
+ok    [nativo] sem rolagem horizontal em 390 px
+ok    [nativo] estado WebMCP esperado (com) · com
+ok    [nativo] busca pelo formulário funciona · of-301
+ok    [nativo] reserva pelo formulário funciona
+ok    [nativo] as 4 ferramentas do kit registradas · buscar_oficinas, listar_comentarios, minhas_reservas, reservar_vaga
+ok    [nativo] ferramenta devolve o mesmo que o formulário · of-301
+ok    [nativo] a tela mostra o que o agente recebeu · of-301
+ok    [nativo] reserva recusada na tela não reserva
+ok    [nativo] reserva confirmada aparece na tela
+ok    [nativo] entrada inválida volta erro legível, sem mudar nada · tema inválido: cobol
+ok    [nativo] ao sair da página as ferramentas saem (AbortSignal) · 0 restantes, toolchange 4x
+ok    [nativo] nenhum erro de JavaScript na sessão do agente
+BATERIA: 31/31 ok
+saída: 0

@@ -1,0 +1,107 @@
+{
+  "slug": "catalogo",
+  "num": 7,
+  "menu": "Catálogo",
+  "titulo": "Desenhar o catálogo e migrar um site existente sem quebrar ninguém",
+  "titulo_curto": "Catálogo e migração",
+  "minutos": 18,
+  "lead": "Um catálogo bom tem poucas ferramentas, cada uma com uma intenção, nome com verbo, entrada mínima e erro que o agente entende. Num site que já existe, a regra sai da interface para uma função que atende o clique e a ferramenta. Nesta aula você revisa um catálogo ruim com o validador e planeja a migração do seu site.",
+  "objetivo": "desenhar um catálogo pequeno (uma intenção por ferramenta), revisá-lo com o validador e integrá-lo a um site existente com detecção e fallback.",
+  "competencias": ["desenhar-catalogo", "revisar-com-validador", "migrar-com-fallback"],
+  "aprende": [
+    { "icone": "alvo", "t": "Uma intenção por ferramenta, nome com verbo, entrada mínima" },
+    { "icone": "check", "t": "O validador do kit: regras da spec e regras do curso" },
+    { "icone": "chat", "t": "Erro que o agente entende: devolver { erro } em vez de lançar" },
+    { "icone": "camadas", "t": "Migrar: inventário, regra compartilhada, wrapper fino, fallback" }
+  ],
+  "hero_alt": "Gaveteiro de oficina escuro com gavetas pequenas e etiquetas em branco, uma delas aberta com conectores organizados.",
+  "secoes": [
+    {
+      "tipo": "diagrama",
+      "titulo": "Migrar sem quebrar quem não tem a API",
+      "sub": "Clique em cada etapa.",
+      "estilo": "escada",
+      "nos": [
+        { "icone": "lupa", "titulo": "Inventário", "sub": "o que existe", "detalhe": "Liste formulários, handlers, serviços e endpoints. Ex.: formulário → submitHandler → serviço → POST /api/inscricoes. Mostra onde a regra já existe e onde está presa à tela." },
+        { "icone": "alvo", "titulo": "Prioridade", "sub": "valor × risco", "detalhe": "Comece pelo que é frequente, valioso e só lê. Ação irreversível e mal entendida fica para depois, com confirmação." },
+        { "icone": "chip", "titulo": "Regra", "sub": "uma função", "detalhe": "Tire a regra da interface: a mesma função atende o clique da pessoa e a ferramenta. No kit, agenda.buscar e agenda.reservar." },
+        { "icone": "arquivo", "titulo": "Wrapper", "sub": "fino", "detalhe": "A ferramenta só valida, chama a regra, mostra na tela e devolve. Nada de lógica nova escondida no execute." },
+        { "icone": "portao", "titulo": "Fallback", "sub": "modo Sem", "forte": true, "detalhe": "Detecção de document.modelContext e o site igual sem ela. A bateria da aula 8 prova no modo Sem antes de qualquer outra coisa." }
+      ],
+      "legenda": "Etapas adaptadas dos módulos de integração da formação antiga, agora com a API de 16/10/2026."
+    },
+    {
+      "tipo": "passos",
+      "titulo": "Regras de um bom catálogo",
+      "sub": "As que o validador confere e as que só você pode conferir.",
+      "passos": [
+        { "titulo": "Intenção", "sub": "uma por ferramenta", "texto": ["Duas ferramentas que respondem ao mesmo pedido obrigam o agente a adivinhar.", "Comece pela jornada da pessoa, não pela lista de botões."], "exemplo": { "rot": "Bom", "texto": "buscar_oficinas · reservar_vaga · minhas_reservas" } },
+        { "titulo": "Descrição", "sub": "o que faz e o que não", "texto": ["Diga o efeito, o que a ferramenta não faz e quando usar.", "\"Faz coisas\" e \"gerencia\" não ajudam ninguém a escolher."], "exemplo": { "rot": "Kit", "texto": "Lista as oficinas da agenda por tema. Só lê: não reserva nada." } },
+        { "titulo": "Entrada", "sub": "mínima e fechada", "texto": ["Só os campos necessários, enum quando a lista é fechada, additionalProperties: false.", "Valide de novo no execute: no Chromium 156, a entrada inválida chegou ao execute (medido no kit)."] },
+        { "titulo": "Erro", "sub": "como dado", "texto": ["Se o execute lança, o agente recebe só UnknownError, sem o motivo (Chromium 156).", "Erro de regra volta como { erro: 'tema inválido: cobol' }; throw só para o inesperado."], "exemplo": { "rot": "Kit", "texto": "comErroUtil(fn) em kit/pagina/ferramentas.mjs" } }
+      ]
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "O validador contra um catálogo ruim",
+      "sub": "validar-catalogo.mjs lê as definições sem abrir navegador nem executar nada. Erro reprova (saída 1); aviso não.",
+      "blocos": [
+        { "rot": "Terminal · catálogo ruim e o do kit", "icone": "terminal", "conteudo": "@@bloco:a7-validar@@" }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          { "rot": "Saída capturada (19/10/2026)", "html": "@@saida:a7-validar@@<p>Regras da spec: nome, descrição não vazia, nomes únicos. Regras do curso: schema object fechado e descrito, anotações conhecidas e coerentes, nome de ação com efeito marcado com consequentialHint.</p>" }
+        ]
+      }
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "Em framework: registrar ao montar, abortar ao desmontar",
+      "sub": "Modelo para adaptar (não roda no kit). Angular tem suporte experimental, segundo a doc do Chrome de 07/10/2026; o padrão abaixo vale para qualquer um.",
+      "blocos": [
+        { "rot": "Modelo · componente React", "icone": "caneta", "conteudo": "useEffect(() => {\n  const mc = document.modelContext;\n  if (!mc) return;                       // sem a API: a tela segue igual\n  const ciclo = new AbortController();\n  registrar(mc, catalogo(agenda, ui), ciclo.signal).catch(() => {});\n  return () => ciclo.abort();            // desmontou: as ferramentas saem\n}, [agenda]);" },
+        { "rot": "Modelo · JavaScript sem framework", "icone": "caneta", "conteudo": "// entrar na tela\nconst ciclo = new AbortController();\nif (document.modelContext) await registrar(document.modelContext, defsDaTela, ciclo.signal);\n// sair da tela (rota nova, modal fechado)\nciclo.abort();" }
+      ]
+    },
+    {
+      "tipo": "pratica",
+      "titulo": "Prática",
+      "sub": "Validador e o plano do seu site.",
+      "exercicios": [
+        { "id": "e1", "titulo": "E1 · Ver o validador reprovar", "min": "3 min", "texto": "Rode o bloco do validador.", "pronto": "<code>node scripts/validar-catalogo.mjs catalogos/ruim.mjs; echo \"saída: $?\"</code> → <code>CATÁLOGO: 4 ferramentas · 5 erros · 8 avisos</code> e <code>saída: 1</code>; o do kit → <code>0 erros</code> e <code>saída: 0</code>." },
+        { "id": "e2", "titulo": "E2 · Consertar o catálogo ruim", "min": "15 min", "texto": "Copie catalogos/ruim.mjs para catalogos/meu.mjs e corrija até zerar os erros: nome sem espaço, descrição útil, anotação booleana e conhecida, cancelar_reserva com consequentialHint.", "pronto": "<code>node scripts/validar-catalogo.mjs catalogos/meu.mjs; echo \"saída: $?\"</code> → <code>0 erros</code> e <code>saída: 0</code>." },
+        { "id": "e3", "titulo": "E3 · Inventário do seu site", "min": "20 min", "texto": "Para o seu site, escreva o inventário (formulário → handler → serviço → endpoint) e escolha 3 ferramentas: 2 que só leem e 1 com efeito, com a tela de confirmação.", "pronto": "Um arquivo catalogo-[seu site].md com as 3 ferramentas (nome, descrição, entrada, anotação) e a regra compartilhada de cada uma." }
+      ]
+    },
+    {
+      "tipo": "quiz",
+      "titulo": "Teste da aula",
+      "sub": "A explicação aparece depois da resposta.",
+      "perguntas": [
+        { "p": "O execute lança Error('sem vaga'). O que o agente recebe no Chromium 156?", "opcoes": ["Um UnknownError genérico, sem o motivo.", "O texto 'sem vaga' no resultado.", "Um OperationError com a mensagem original.", "Nada: a chamada fica pendente para sempre."], "certa": 0, "explica": "Medido em 19/10/2026: UnknownError genérico. A spec de 16/10 lista OperationError para esse caso; o build mede outra coisa. Erro de regra volta como { erro } para o agente poder corrigir.", "ref": "passos" },
+        { "p": "Onde fica a regra de reservar num site migrado?", "opcoes": ["Dentro do execute, separada do formulário.", "No servidor apenas, a página só repassa.", "No handler do botão, e o execute simula o clique.", "Numa função usada pelo clique e pela ferramenta."], "certa": 3, "explica": "A mesma função atende os dois caminhos: assim não há duas regras para divergir. O execute é um wrapper fino. Validar de novo no servidor continua obrigatório.", "ref": "diagrama" },
+        { "p": "Qual destes catálogos tem o problema de intenção duplicada?", "opcoes": ["buscar_oficinas e reservar_vaga.", "buscar_oficinas e procurar_cursos.", "minhas_reservas e reservar_vaga.", "listar_comentarios e buscar_oficinas."], "certa": 1, "explica": "Buscar oficinas e procurar cursos respondem ao mesmo pedido: o agente precisa adivinhar. Os outros pares têm intenções diferentes.", "ref": "passos" },
+        { "p": "Por que a migração termina no modo Sem?", "opcoes": ["Porque o modo Sem é o mais rápido de rodar.", "Porque o polyfill não roda em sites antigos.", "Porque a maioria dos visitantes não tem a API.", "Porque o origin trial exige um teste sem a API."], "certa": 2, "explica": "Sem data de estável e sem Safari e Firefox, quem não tem a API é a maioria. Se o site quebra para eles, a migração falhou, por mais ferramentas que tenha.", "ref": "diagrama" }
+      ]
+    },
+    {
+      "tipo": "resumo",
+      "titulo": "Em três frases",
+      "itens": [
+        { "t": "Catálogo", "texto": "Poucas ferramentas, uma intenção cada, entrada fechada e erro devolvido como dado." },
+        { "t": "Validador", "texto": "Regras da spec e do curso, sem navegador: rode antes de publicar." },
+        { "t": "Migração", "texto": "Inventário, regra compartilhada, wrapper fino e o site igual no modo Sem." }
+      ]
+    },
+    {
+      "tipo": "links",
+      "titulo": "Para ir além",
+      "links": [
+        { "t": "Chrome for Developers: WebMCP (limitações e frameworks)", "href": "https://developer.chrome.com/docs/ai/webmcp", "icone": "arquivo" },
+        { "t": "Spec: erros de execução (tool execution error)", "href": "https://webmachinelearning.github.io/webmcp/", "icone": "arquivo" },
+        { "t": "Curso 1: desenhar boa ferramenta no servidor MCP", "href": "https://inematds.github.io/formacao-webmcp-mcp-v72/", "icone": "camadas" }
+      ]
+    }
+  ]
+}

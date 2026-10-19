@@ -1,0 +1,17 @@
+{
+  "name": "kit-webmcp-no-seu-site",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Kit do curso WebMCP no seu site (Formação WebMCP, INEMA.CLUB). Página de exemplo com ferramentas WebMCP, fallback e testes. Versões fixadas em 19/10/2026.",
+  "scripts": {
+    "postinstall": "node scripts/copiar-polyfill.mjs",
+    "servir": "node scripts/servir.mjs",
+    "test": "node --test && node scripts/validar-catalogo.mjs && node scripts/testar.mjs"
+  },
+  "devDependencies": {
+    "@mcp-b/webmcp-polyfill": "6.0.3",
+    "playwright": "1.64.0"
+  },
+  "engines": { "node": ">=20" }
+}

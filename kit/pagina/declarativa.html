@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Formulário como ferramenta (experimental, fora da spec)</title>
+  <style>body { font: 16px/1.5 system-ui, sans-serif; margin: 0 auto; max-width: 46rem; padding: 1rem; background: #0c0c10; color: #eee; } label { display: block; margin-top: .4rem; } select, input, button { font: inherit; padding: .3rem .5rem; }</style>
+</head>
+<body>
+  <h1>Formulários que viram ferramentas</h1>
+  <p>API declarativa: <b>experimental, fora da spec de 16/10/2026</b>. O Chrome implementa no origin trial; sem ela, são formulários comuns.</p>
+
+  <!-- Só lê: pode enviar sozinho (toolautosubmit). -->
+  <form id="f-busca" toolname="buscar_oficinas_form" tooldescription="Busca oficinas da agenda por tema. Só lê." toolautosubmit>
+    <label for="d-tema">Tema</label>
+    <select id="d-tema" name="tema" required toolparamdescription="Tema da oficina.">
+      <option value="html">HTML</option><option value="javascript">JavaScript</option>
+      <option value="webmcp">WebMCP</option><option value="mcp">MCP</option>
+    </select>
+    <button type="submit">Buscar</button>
+  </form>
+  <ul id="d-resultados"></ul>
+
+  <!-- Tem efeito: SEM toolautosubmit. O agente preenche, a pessoa clica em Reservar. -->
+  <form id="f-reserva" toolname="reservar_vaga_form" tooldescription="Preenche a reserva de uma vaga. Quem envia é a pessoa, clicando em Reservar.">
+    <label for="d-id">Oficina (id)</label>
+    <input id="d-id" name="id" required pattern="of-[0-9]{3}" toolparamdescription="Id da oficina, ex.: of-301.">
+    <label for="d-nome">Seu nome</label>
+    <input id="d-nome" name="nome" required minlength="2">
+    <button type="submit">Reservar</button>
+  </form>
+  <p id="d-reserva" role="status"></p>
+
+  <script type="module">
+    import { criarAgenda } from './oficinas.mjs';
+    const agenda = criarAgenda();
+    const $ = s => document.querySelector(s);
+    $('#f-busca').addEventListener('submit', e => {
+      e.preventDefault();
+      const lista = agenda.buscar({ tema: $('#d-tema').value });
+      $('#d-resultados').replaceChildren(...lista.map(o => Object.assign(document.createElement('li'), { textContent: `${o.id} · ${o.titulo}` })));
+      if (e.agentInvoked) e.respondWith(Promise.resolve({ total: lista.length, ids: lista.map(o => o.id) }));
+    });
+    $('#f-reserva').addEventListener('submit', e => {
+      e.preventDefault();
+      let r;
+      try { r = { reservado: true, reserva: agenda.reservar({ id: $('#d-id').value, nome: $('#d-nome').value }) }; }
+      catch (erro) { r = { erro: erro.message }; }
+      $('#d-reserva').textContent = r.erro || `Reservado: ${r.reserva.titulo} para ${r.reserva.nome}`;
+      if (e.agentInvoked) e.respondWith(Promise.resolve(r));
+    });
+    // Ensaio: ?ensaio=polyfill carrega a camada declarativa TEMPORÁRIA do @mcp-b/webmcp-polyfill (nunca em produção).
+    if (new URLSearchParams(location.search).get('ensaio') === 'polyfill' && !document.modelContext) {
+      await new Promise(ok => document.head.append(Object.assign(document.createElement('script'), { src: './vendor/webmcp-polyfill.js', onload: ok, onerror: ok })));
+    }
+    document.documentElement.dataset.webmcp = document.modelContext ? 'com' : 'sem';
+  </script>
+</body>
+</html>

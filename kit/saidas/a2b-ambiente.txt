@@ -1,0 +1,10 @@
+== Chromium 156.0.8078.4 (Playwright) · modo: sem
+contexto seguro: sim · document.modelContext: ausente · navigator.modelContext: ausente
+página: sem · aviso: Este navegador não expõe WebMCP. Tudo funciona pelo formulário.
+== Chromium 156.0.8078.4 (Playwright) · modo: polyfill
+contexto seguro: sim · document.modelContext: presente · navigator.modelContext: ausente
+página: com · aviso: WebMCP ativo: 4 ferramentas registradas.
+== Chromium 156.0.8078.4 (Playwright) · modo: nativo
+contexto seguro: sim · document.modelContext: presente · navigator.modelContext: ausente
+página: com · aviso: WebMCP ativo: 4 ferramentas registradas.
+saída: 0

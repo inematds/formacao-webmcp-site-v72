@@ -1,0 +1,16 @@
+== Chromium 156.0.8078.4 (Playwright) · modo: nativo
+antes: 4 ferramentas
+registrou tarefa_lenta: 5 ferramentas
+nome repetido: recusado (InvalidStateError)
+execução cancelada pelo chamador: AbortError
+depois do abort(): 4 ferramentas
+eventos: toolchange toolactivated:tarefa_lenta toolcancel:tarefa_lenta toolchange
+saída: 0
+== Chromium 156.0.8078.4 (Playwright) · modo: polyfill
+antes: 4 ferramentas
+registrou tarefa_lenta: 5 ferramentas
+nome repetido: recusado (InvalidStateError)
+execução cancelada pelo chamador: AbortError
+depois do abort(): 4 ferramentas
+eventos: toolchange toolchange
+saída: 0

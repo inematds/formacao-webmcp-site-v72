@@ -1,0 +1,14 @@
+== Chromium 156.0.8078.4 (Playwright) · modo: nativo
+ferramenta do formulário: buscar_oficinas_form · campos: tema
+ferramenta do formulário: reservar_vaga_form · campos: id, nome
+buscar_oficinas_form (toolautosubmit): {"total":1,"ids":["of-301"]}
+reservar_vaga_form preencheu: id=of-301 nome=Rita · enviado? não, esperando a pessoa
+pessoa clicou em Reservar → {"reservado":true,"reserva":{"id":"of-301","nome":"Rita","titulo":"Primeira ferramenta WebMCP"}}
+saída: 0
+== Chromium 156.0.8078.4 (Playwright) · modo: polyfill
+ferramenta do formulário: buscar_oficinas_form · campos: tema
+ferramenta do formulário: reservar_vaga_form · campos: id, nome
+buscar_oficinas_form (toolautosubmit): {"total":1,"ids":["of-301"]}
+reservar_vaga_form preencheu: id=of-301 nome=Rita · enviado? não, esperando a pessoa
+pessoa clicou em Reservar → {"reservado":true,"reserva":{"id":"of-301","nome":"Rita","titulo":"Primeira ferramenta WebMCP"}}
+saída: 0

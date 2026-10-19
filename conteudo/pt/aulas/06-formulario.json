@@ -1,0 +1,88 @@
+{
+  "slug": "formulario",
+  "num": 6,
+  "menu": "Formulário",
+  "titulo": "Formulário como ferramenta: toolname e toolautosubmit (experimental, fora da spec)",
+  "titulo_curto": "Formulário como ferramenta",
+  "minutos": 14,
+  "lead": "O Chrome deixa um formulário virar ferramenta com três atributos HTML. É o caminho mais curto para quem já tem formulário bem rotulado, mas ficou fora da spec de 16/10/2026: existe no origin trial do Chrome e numa camada temporária do polyfill. Nesta aula você usa com essa etiqueta e decide quando o formulário pode se enviar sozinho.",
+  "objetivo": "transformar um formulário em ferramenta com toolname, sabendo que é experimental e fora da spec, e decidir quando usar toolautosubmit.",
+  "competencias": ["marcar-formulario-como-ferramenta", "decidir-envio-automatico", "responder-ao-agente-com-respondWith"],
+  "aprende": [
+    { "icone": "arquivo", "t": "toolname, tooldescription e toolparamdescription" },
+    { "icone": "lista", "t": "O schema que o navegador monta a partir dos campos" },
+    { "icone": "portao", "t": "toolautosubmit só para o que só lê" },
+    { "icone": "enviar", "t": "agentInvoked e respondWith no submit" }
+  ],
+  "hero_alt": "Monitor escuro com um formulário web abstrato e, à frente, uma prancheta com um formulário de papel em branco.",
+  "secoes": [
+    {
+      "tipo": "diagrama",
+      "titulo": "Do formulário à ferramenta",
+      "sub": "Experimental em 19/10/2026, fora da spec. Clique em cada passo.",
+      "nos": [
+        { "icone": "arquivo", "titulo": "Formulário", "sub": "atributos", "detalhe": "toolname e tooldescription no form; toolparamdescription nos campos (sem ele, o Chrome usa o label). Tirar toolname ou tooldescription desregistra a ferramenta." },
+        { "icone": "lista", "titulo": "Schema", "sub": "o navegador monta", "detalhe": "name do campo vira propriedade; required, select e tipo viram regras do JSON Schema. Label claro ajuda a pessoa e o agente." },
+        { "icone": "robo", "titulo": "Agente preenche", "sub": "toolactivated", "detalhe": "O navegador traz o formulário para o foco e preenche os campos, à vista da pessoa. O CSS :tool-form-active marca o formulário ativo." },
+        { "icone": "portao", "titulo": "Quem envia?", "sub": "autosubmit ou pessoa", "forte": true, "detalhe": "Com toolautosubmit, o envio é automático. Sem ele, o formulário espera a pessoa clicar. No submit, e.agentInvoked diz se veio do agente e e.respondWith(promise) devolve o resultado." }
+      ],
+      "legenda": "README do WebMCP: \"Future Exploration… not part of the specification at this time\". O Chrome documenta e implementa no trial (página atualizada em 25/09/2026).",
+      "dica": "Use a API imperativa (aulas 3 a 5) como base. O formulário declarativo é extra: se sumir, o formulário continua sendo formulário."
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "Dois formulários: um se envia, o outro espera",
+      "sub": "Trecho de kit/pagina/declarativa.html. A busca só lê e pode usar toolautosubmit; a reserva tem efeito e espera o clique.",
+      "blocos": [
+        { "rot": "Trecho · kit/pagina/declarativa.html (HTML)", "icone": "arquivo", "conteudo": "<!-- Só lê: pode enviar sozinho (toolautosubmit). -->\n<form id=\"f-busca\" toolname=\"buscar_oficinas_form\" tooldescription=\"Busca oficinas da agenda por tema. Só lê.\" toolautosubmit>\n  <label for=\"d-tema\">Tema</label>\n  <select id=\"d-tema\" name=\"tema\" required toolparamdescription=\"Tema da oficina.\">\n    <option value=\"html\">HTML</option><option value=\"javascript\">JavaScript</option>\n    <option value=\"webmcp\">WebMCP</option><option value=\"mcp\">MCP</option>\n  </select>\n  <button type=\"submit\">Buscar</button>\n</form>\n\n<!-- Tem efeito: SEM toolautosubmit. O agente preenche, a pessoa clica em Reservar. -->\n<form id=\"f-reserva\" toolname=\"reservar_vaga_form\" tooldescription=\"Preenche a reserva de uma vaga. Quem envia é a pessoa, clicando em Reservar.\">\n  <label for=\"d-id\">Oficina (id)</label>\n  <input id=\"d-id\" name=\"id\" required pattern=\"of-[0-9]{3}\" toolparamdescription=\"Id da oficina, ex.: of-301.\">\n  <label for=\"d-nome\">Seu nome</label>\n  <input id=\"d-nome\" name=\"nome\" required minlength=\"2\">\n  <button type=\"submit\">Reservar</button>\n</form>" },
+        { "rot": "Trecho · kit/pagina/declarativa.html (submit)", "icone": "arquivo", "conteudo": "$('#f-busca').addEventListener('submit', e => {\n  e.preventDefault();\n  const lista = agenda.buscar({ tema: $('#d-tema').value });\n  $('#d-resultados').replaceChildren(...lista.map(o => Object.assign(document.createElement('li'), { textContent: `${o.id} · ${o.titulo}` })));\n  if (e.agentInvoked) e.respondWith(Promise.resolve({ total: lista.length, ids: lista.map(o => o.id) }));\n});" },
+        { "rot": "Terminal · nativo e polyfill", "icone": "terminal", "conteudo": "@@bloco:a6-declarativa@@" }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          { "rot": "Saída capturada (19/10/2026)", "html": "@@saida:a6-declarativa@@<p>A busca volta direto (toolautosubmit). A reserva fica preenchida e parada até o clique: o declarativa.mjs faz o papel da pessoa.</p>" },
+          { "rot": "Erro comum: toolautosubmit em tudo", "html": "<p>Com <code>toolautosubmit</code> no formulário de reserva, o agente preenche e envia sem a pessoa ver. Reserve o envio automático para o que só lê. E lembre: <code>respondWith</code> exige <code>preventDefault()</code> antes, senão o navegador segue com o envio normal.</p>" }
+        ]
+      }
+    },
+    {
+      "tipo": "pratica",
+      "titulo": "Prática",
+      "sub": "Nativo e polyfill.",
+      "exercicios": [
+        { "id": "e1", "titulo": "E1 · Os dois formulários", "min": "4 min", "texto": "Rode o bloco e compare as linhas de busca e de reserva.", "pronto": "<code>node scripts/declarativa.mjs nativo</code> → <code>enviado? não, esperando a pessoa</code> e <code>pessoa clicou em Reservar → {\"reservado\":true,</code> e <code>saída: 0</code>." },
+        { "id": "e2", "titulo": "E2 · Um formulário seu", "min": "15 min", "texto": "Pegue um formulário de busca do seu site (só leitura), acrescente toolname, tooldescription e toolparamdescription numa cópia local. Deixe um comentário no HTML: experimental, fora da spec, data.", "pronto": "<code>PAGINA=[sua pasta] node scripts/listar.mjs nativo [arquivo].html</code> → a linha com o seu toolname; no modo <code>sem</code>, o formulário envia como antes. O comentário com a data está no HTML." }
+      ]
+    },
+    {
+      "tipo": "quiz",
+      "titulo": "Teste da aula",
+      "sub": "A explicação aparece depois da resposta.",
+      "perguntas": [
+        { "p": "Qual a situação da API declarativa (toolname) em 19/10/2026?", "opcoes": ["Faz parte da spec de 16/10/2026 junto com registerTool.", "Foi removida do Chrome junto com navigator.modelContext.", "Está fora da spec; o Chrome implementa no origin trial.", "Já é padrão W3C, só falta o Safari implementar."], "certa": 2, "explica": "O README diz que é exploração futura, fora da spec. O Chrome documenta e implementa no trial. Por isso o curso põe o selo \"experimental, fora da spec\".", "ref": "diagrama" },
+        { "p": "Quando usar toolautosubmit?", "opcoes": ["Em todo formulário, para o agente não travar.", "Só em formulários com mais de três campos.", "Nunca: o Chrome removeu o atributo no 156.", "Em formulário que só lê, como uma busca."], "certa": 3, "explica": "Envio automático tira a pessoa do circuito. Numa busca, tudo bem; numa reserva, o formulário deve esperar o clique.", "ref": "codigo" },
+        { "p": "Como o submit sabe que foi o agente que preencheu?", "opcoes": ["Pelo atributo e.agentInvoked do SubmitEvent.", "Pelo cabeçalho User-Agent da requisição.", "Por um campo oculto que o navegador cria.", "Pelo evento toolchange disparado antes."], "certa": 0, "explica": "SubmitEvent ganha agentInvoked (true quando veio do agente) e respondWith(promise) para devolver o resultado, depois de preventDefault().", "ref": "codigo" },
+        { "p": "Sem toolparamdescription num campo, de onde o Chrome tira a descrição?", "opcoes": ["Do atributo placeholder do campo.", "Do label associado ao campo.", "Do texto do botão de enviar.", "De lugar nenhum: o campo fica sem descrição."], "certa": 1, "explica": "Pela doc do Chrome (25/09/2026), sem toolparamdescription o navegador usa o label associado; sem label, o aria-description. Formulário bem rotulado já ajuda.", "ref": "diagrama" }
+      ]
+    },
+    {
+      "tipo": "resumo",
+      "titulo": "Em três frases",
+      "itens": [
+        { "t": "Fora da spec", "texto": "toolname/tooldescription/toolautosubmit existem no Chrome em trial, não na spec de 16/10/2026." },
+        { "t": "Quem envia", "texto": "toolautosubmit só no que só lê; o resto espera o clique da pessoa." },
+        { "t": "Base", "texto": "A API imperativa é a base; o formulário declarativo é extra e continua funcionando sem a API." }
+      ]
+    },
+    {
+      "tipo": "links",
+      "titulo": "Para ir além",
+      "links": [
+        { "t": "Chrome for Developers: API declarativa", "href": "https://developer.chrome.com/docs/ai/webmcp/declarative-api", "icone": "arquivo" },
+        { "t": "Explainer da API declarativa (fora da spec)", "href": "https://github.com/webmachinelearning/webmcp/blob/main/declarative-api-explainer.md", "icone": "git" },
+        { "t": "Curso 0: HTML semântico e formulário bem rotulado", "href": "https://inematds.github.io/formacao-webmcp-base-v72/", "icone": "camadas" }
+      ]
+    }
+  ]
+}

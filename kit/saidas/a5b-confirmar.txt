@@ -1,0 +1,12 @@
+== Chromium 156.0.8078.4 (Playwright) · modo: nativo
+tela pediu: Reservar "Primeira ferramenta WebMCP" (2026-11-18) para Rita?
+pessoa clicou: Recusar
+resultado (string): {"reservado":false,"motivo":"a pessoa recusou na tela"}
+tela · resultados: 6 · reservas: Nenhuma reserva.
+saída: 0
+== Chromium 156.0.8078.4 (Playwright) · modo: nativo
+tela pediu: Reservar "Primeira ferramenta WebMCP" (2026-11-18) para Rita?
+pessoa clicou: Confirmar
+resultado (string): {"reservado":true,"reserva":{"id":"of-301","nome":"Rita","titulo":"Primeira ferramenta WebMCP"}}
+tela · resultados: 6 · reservas: of-301 · Primeira ferramenta WebMCP · Rita
+saída: 0

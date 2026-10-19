@@ -1,0 +1,25 @@
+ERRO  fazer tudo
+      erro: nome fora da regra (1–128: letras, números, _ - .)
+      aviso: descrição curta: diga o que faz, o que NÃO faz e quando usar
+      aviso: sem inputSchema
+      aviso: diga se só lê (readOnlyHint) ou se tem consequência (consequentialHint)
+ERRO  buscar
+      erro: anotação readOnlyHint não é true/false
+      aviso: descrição curta: diga o que faz, o que NÃO faz e quando usar
+      aviso: inputSchema aceita campo extra (use additionalProperties: false)
+      aviso: campo "q" sem description
+ERRO  cancelar_reserva
+      erro: nome de ação com efeito sem consequentialHint
+ERRO  ver_agenda
+      erro: descrição vazia
+      erro: anotação desconhecida: readOnly
+      aviso: sem inputSchema
+      aviso: diga se só lê (readOnlyHint) ou se tem consequência (consequentialHint)
+CATÁLOGO: 4 ferramentas · 5 erros · 8 avisos
+saída: 1
+OK    buscar_oficinas
+OK    listar_comentarios
+OK    reservar_vaga
+OK    minhas_reservas
+CATÁLOGO: 4 ferramentas · 0 erros · 0 avisos
+saída: 0

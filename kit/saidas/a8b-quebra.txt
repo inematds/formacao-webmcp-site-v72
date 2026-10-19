@@ -1,0 +1,3 @@
+FALHA [nativo] reserva recusada na tela não reserva
+BATERIA: 12/13 ok
+saída: 1

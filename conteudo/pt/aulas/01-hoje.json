@@ -1,0 +1,101 @@
+{
+  "slug": "hoje",
+  "num": 1,
+  "menu": "Hoje",
+  "titulo": "WebMCP hoje: rascunho de 16/10/2026, origin trial, flag e quem apoia",
+  "titulo_curto": "WebMCP hoje",
+  "minutos": 12,
+  "lead": "WebMCP deixa a página entregar ferramentas a um agente no navegador. Em 19/10/2026 ele é rascunho de Community Group, testado em origin trial no Chrome e no Edge, com Mozilla neutra e WebKit contra. Nesta aula você confere a data da spec com um comando e aprende a ler o status sem cair em promessa.",
+  "objetivo": "situar o WebMCP em 16/10/2026 (rascunho de CG, origin trial 149–156, flag local, apoios e objeções) e conferir a data da spec por comando.",
+  "competencias": ["ler-status-de-spec", "separar-rascunho-de-padrao", "conferir-data-da-api"],
+  "aprende": [
+    { "icone": "arquivo", "t": "O que é um Draft Community Group Report e o que ele não é" },
+    { "icone": "calendario", "t": "Origin trial 149–156, flag local e a falta de data de estável" },
+    { "icone": "camadas", "t": "Quem apoia, quem está neutro e quem é contra, com data" },
+    { "icone": "terminal", "t": "Um comando que confere a data e o nome da API na spec" }
+  ],
+  "hero_alt": "Folhas de um documento técnico presas com clipe sobre mesa escura, ao lado de um carimbo virado e de um calendário de mesa.",
+  "secoes": [
+    {
+      "tipo": "diagrama",
+      "titulo": "Onde o WebMCP está em 19/10/2026",
+      "sub": "Clique em cada etapa.",
+      "estilo": "escada",
+      "nos": [
+        { "icone": "arquivo", "titulo": "Explainer", "sub": "a ideia", "detalhe": "O repositório webmachinelearning/webmcp nasceu de explainers. A API declarativa (formulário como ferramenta) continua só num explainer separado: \"Future Exploration… not part of the specification at this time\"." },
+        { "icone": "camadas", "titulo": "Rascunho CG", "sub": "16/10/2026", "forte": true, "detalhe": "Draft Community Group Report do Web Machine Learning CG, de 16/10/2026. O próprio documento diz que não é padrão W3C nem está na trilha de padrões. Editores da Microsoft e do Google; há testes no WPT." },
+        { "icone": "chip", "titulo": "Origin trial", "sub": "Chrome 149–156", "detalhe": "Experimental em 19/10/2026. No Chrome, origin trial do 149 ao 156 (dev trial desde o 146); no Edge, a partir do 150. Para desenvolver em localhost, a flag chrome://flags/#enable-webmcp-testing." },
+        { "icone": "relogio", "titulo": "Estável", "sub": "sem data", "detalhe": "O Chrome Status ainda marca \"Proposed\" e não há previsão de lançamento estável. O trial acaba no 156, e a API pode mudar antes disso. Já mudou uma vez: navigator.modelContext virou document.modelContext em 19/05/2026." }
+      ],
+      "legenda": "Rascunho com data, trial com prazo e nenhuma data de estável: por isso o curso ensina a preparar a página com detecção e fallback.",
+      "dica": "Mozilla: neutra (03/08/2026). WebKit: contra. Sem esses dois, nenhum site pode contar com o WebMCP em todo navegador."
+    },
+    {
+      "tipo": "passos",
+      "titulo": "Como ler o status sem cair em promessa",
+      "sub": "Quatro perguntas, sempre com data.",
+      "passos": [
+        { "titulo": "Que documento?", "sub": "o tipo", "texto": ["Spec de Community Group é rascunho de um grupo aberto. Não é padrão W3C.", "Leia o subtítulo da spec: o tipo e a data estão no topo."], "exemplo": { "rot": "Em 19/10/2026", "texto": "Draft Community Group Report, 16 October 2026." } },
+        { "titulo": "Que navegador?", "sub": "e como liga", "texto": ["Origin trial vale para um domínio com token e tem fim marcado. Flag só vale na sua máquina.", "Nenhum dos dois chega ao visitante comum sem você fazer nada."], "exemplo": { "rot": "Chrome", "texto": "Origin trial 149–156; flag #enable-webmcp-testing para localhost." } },
+        { "titulo": "Quem é contra?", "sub": "posições", "texto": ["Posições de padrões dizem se outro motor pretende implementar.", "WebKit se opôs citando desenho da API, duplicação, i18n, portabilidade, privacidade e segurança."], "exemplo": { "rot": "Posições", "texto": "Mozilla #1412: neutral (03/08/2026). WebKit #670: oppose." } },
+        { "titulo": "O que muda?", "sub": "o instável", "texto": ["Nome da superfície, API declarativa, anotações, exposedTo e forma de retorno podem mudar.", "Guarde a data da spec no código, como no comentário do kit."], "exemplo": { "rot": "Já mudou", "texto": "navigator.modelContext → document.modelContext (PR #177, 19/05/2026)." } }
+      ]
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "Conferir a data e o nome da API na própria spec",
+      "sub": "Baixa a spec, tira as tags e conta. Se a data for outra, a spec mudou: releia o que mudou antes de seguir o curso.",
+      "blocos": [
+        { "rot": "Terminal · data da spec e nome da API", "icone": "terminal", "conteudo": "@@bloco:a1-spec@@" }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          { "rot": "Saída capturada (19/10/2026)", "html": "@@saida:a1-spec@@<p>16 linhas citam document.modelContext; nenhuma cita navigator.modelContext nem unregisterTool. Para remover uma ferramenta, a spec usa o signal de um AbortController (aula 4).</p>" },
+          { "rot": "Erro comum: tutorial antigo", "html": "<p>Tutorial com <code>navigator.modelContext</code>, <code>unregisterTool</code>, <code>provideContext</code> ou <code>clearContext</code> foi escrito antes de 16/10/2026: nenhum desses nomes existe na spec atual. A mesma conta acima (0 linhas) é o seu teste antes de copiar código de blog.</p>" }
+        ]
+      }
+    },
+    {
+      "tipo": "pratica",
+      "titulo": "Prática",
+      "sub": "Sem instalar nada além de curl.",
+      "exercicios": [
+        { "id": "e1", "titulo": "E1 · A data da spec", "min": "3 min", "texto": "Rode o bloco da spec e anote a data no topo do seu arquivo de ferramentas, como no comentário de kit/pagina/ferramentas.mjs.", "pronto": "O bloco (colado no terminal) imprime <code>Draft Community Group Report, 16 October 2026</code> e <code>navigator.modelContext: 0 linhas</code>. Outra data = spec nova: anote o que mudou." },
+        { "id": "e2", "titulo": "E2 · O status com data", "min": "7 min", "texto": "Abra o Chrome Status (entrada 5117755740913664) e as posições da Mozilla (#1412) e do WebKit (#670). Escreva três linhas: estágio, navegadores e posições, cada uma com a data em que você leu.", "pronto": "Você tem um arquivo status-webmcp.md com três linhas datadas e nenhuma diz \"padrão\" nem \"funciona em todo navegador\"." }
+      ]
+    },
+    {
+      "tipo": "quiz",
+      "titulo": "Teste da aula",
+      "sub": "A explicação aparece depois da resposta.",
+      "perguntas": [
+        { "p": "O que é o documento de 16/10/2026 do WebMCP?", "opcoes": ["Uma Recomendação W3C, padrão final da web.", "Um rascunho de Community Group, fora da trilha de padrões.", "Uma especificação do WHATWG já no HTML.", "Uma proposta interna do Chrome sem texto público."], "certa": 1, "explica": "É Draft Community Group Report do Web Machine Learning CG, e o texto diz que não é padrão W3C nem está na trilha. O erro comum é chamar de \"padrão\" só porque está no domínio do W3C.", "ref": "diagrama" },
+        { "p": "Você quer testar WebMCP no localhost hoje. O que liga?", "opcoes": ["O token de origin trial do domínio de produção.", "Nada: o Chrome estável já traz a API ligada.", "A extensão de outro navegador com WebMCP.", "A flag chrome://flags/#enable-webmcp-testing."], "certa": 3, "explica": "Para desenvolvimento local, a flag. O token de origin trial vale para o seu domínio, não para localhost de qualquer máquina, e o Chrome estável não traz a API por padrão.", "ref": "passos" },
+        { "p": "Qual destes nomes ainda existe na spec de 16/10/2026?", "opcoes": ["document.modelContext.registerTool", "navigator.modelContext.registerTool", "document.modelContext.unregisterTool", "navigator.modelContext.provideContext"], "certa": 0, "explica": "A superfície é document.modelContext. navigator.modelContext é o nome antigo (trocado em 19/05/2026), e unregisterTool e provideContext não existem: remove-se com AbortSignal.", "ref": "codigo" },
+        { "p": "Por que o curso usa detecção de recurso e fallback em todo exemplo?", "opcoes": ["Porque o WebMCP é fator de ranking nas buscas.", "Porque o fallback deixa a página mais rápida.", "Porque não há data de estável e WebKit é contra.", "Porque o Chrome exige isso para aceitar o token."], "certa": 2, "explica": "Sem data de estável, com Mozilla neutra e WebKit contra, a maioria dos visitantes não terá a API. WebMCP é preparação, não ranking: GEO e citação nas IAs ficam na Formação inemaSEO.", "ref": "diagrama" }
+      ]
+    },
+    {
+      "tipo": "resumo",
+      "titulo": "Em três frases",
+      "itens": [
+        { "t": "Rascunho", "texto": "WebMCP é Draft Community Group Report de 16/10/2026: experimental, não padrão." },
+        { "t": "Onde roda", "texto": "Origin trial no Chrome 149–156 e no Edge 150, flag para localhost; sem data de estável." },
+        { "t": "Como preparar", "texto": "Data da spec no código, detecção de recurso e o site funcionando igual sem a API." }
+      ]
+    },
+    {
+      "tipo": "links",
+      "titulo": "Para ir além",
+      "links": [
+        { "t": "Spec WebMCP (Draft CG Report)", "href": "https://webmachinelearning.github.io/webmcp/", "icone": "arquivo" },
+        { "t": "Status de implementação por navegador", "href": "https://github.com/webmachinelearning/webmcp/blob/main/implementation-status.md", "icone": "lista" },
+        { "t": "Chrome Status: WebMCP", "href": "https://chromestatus.com/feature/5117755740913664", "icone": "grafico" },
+        { "t": "Posição da Mozilla (#1412)", "href": "https://github.com/mozilla/standards-positions/issues/1412", "icone": "chat" },
+        { "t": "Posição do WebKit (#670)", "href": "https://github.com/WebKit/standards-positions/issues/670", "icone": "chat" },
+        { "t": "Curso 0 da formação: como os agentes usam um site hoje", "href": "https://inematds.github.io/formacao-webmcp-base-v72/", "icone": "camadas" }
+      ]
+    }
+  ]
+}

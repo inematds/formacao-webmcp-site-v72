@@ -1,0 +1,6 @@
+__pycache__/
+longrun/*/logs/
+*.mp4
+.telas/
+node_modules/
+kit/pagina/vendor/

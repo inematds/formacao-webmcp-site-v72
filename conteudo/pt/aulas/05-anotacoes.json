@@ -1,0 +1,131 @@
+{
+  "slug": "anotacoes",
+  "num": 5,
+  "menu": "Anotações",
+  "titulo": "Anotações e confirmação: readOnly, consequential e untrustedContent",
+  "titulo_curto": "Anotações e confirmação",
+  "minutos": 16,
+  "lead": "Anotação é uma dica que a página dá ao agente e ao navegador: esta ferramenta só lê, esta tem consequência, esta devolve texto de terceiros. Dica não é trava. Por isso a ação com efeito do kit também espera a pessoa clicar em Confirmar. Nesta aula você marca as anotações e vê a confirmação funcionar.",
+  "objetivo": "marcar cada ferramenta com a anotação certa e fazer a ação com consequência esperar a pessoa clicar em Confirmar na tela.",
+  "competencias": ["escolher-anotacao", "por-acao-atras-de-confirmacao", "tratar-saida-de-terceiros-como-dado"],
+  "aprende": [
+    { "icone": "lupa", "t": "readOnlyHint: só lê, não muda nada" },
+    { "icone": "portao", "t": "consequentialHint e a confirmação na tela" },
+    { "icone": "escudo", "t": "untrustedContentHint: a saída traz texto de terceiros" },
+    { "icone": "chat", "t": "Responder ao pedido de tirar a confirmação" }
+  ],
+  "hero_alt": "Robô humanoide industrial de visor preto diante de um monitor, com a mão parada no mouse, observado por uma pessoa de braços cruzados.",
+  "secoes": [
+    {
+      "tipo": "diagrama",
+      "titulo": "Três anotações, um portão",
+      "sub": "Clique em cada uma. Todas são booleanas e começam em false.",
+      "nos": [
+        { "icone": "lupa", "titulo": "readOnlyHint", "sub": "só lê", "detalhe": "A ferramenta não muda estado, só lê dados. Ajuda o agente a decidir quando é seguro chamar. No kit: buscar_oficinas, listar_comentarios, minhas_reservas." },
+        { "icone": "escudo", "titulo": "untrusted", "sub": "texto de fora", "detalhe": "untrustedContentHint: a saída traz dado que o autor da página não controla (comentário, avaliação, mensagem). A spec recomenda para spotlighting: o agente deve tratar como dado, nunca como instrução." },
+        { "icone": "portao", "titulo": "consequential", "sub": "tem efeito", "forte": true, "detalhe": "consequentialHint: a execução tem efeito significativo, real ou irreversível. No kit, reservar_vaga. Além da anotação, o execute só grava depois do clique em Confirmar." },
+        { "icone": "usuario", "titulo": "Pessoa", "sub": "confirma", "detalhe": "A dica pode ser ignorada por um agente mal feito. O clique na tela, não: é a página que decide gravar. Ameaça, injeção e confirmação a fundo ficam no curso 4." }
+      ],
+      "legenda": "Anotações conferidas na spec de 16/10/2026 (há também debugging, para ferramentas de depuração). Podem mudar.",
+      "dica": "Anotação não é autorização. Valide a entrada no execute e no servidor como se a chamada viesse de qualquer lugar."
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "As anotações do kit e o texto de terceiros",
+      "sub": "listar.mjs mostra as anotações que o agente recebe; listar_comentarios devolve um comentário que tenta dar ordem ao agente.",
+      "blocos": [
+        { "rot": "Terminal · anotações e comentários", "icone": "terminal", "conteudo": "@@bloco:a5a-comentarios@@" }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          { "rot": "Saída capturada (19/10/2026)", "html": "@@saida:a5a-comentarios@@<p>O segundo comentário manda reservar todas as vagas. A ferramenta só devolve o texto, marcado como untrustedContentHint; quem decide reservar é a pessoa, no Confirmar.</p>" }
+        ]
+      }
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "Confirmação na tela",
+      "sub": "reservar_vaga prepara, mostra o painel e espera. Recusar devolve reservado:false; Confirmar grava e mostra na lista.",
+      "blocos": [
+        { "rot": "Trecho · kit/pagina/ferramentas.mjs", "icone": "arquivo", "conteudo": "annotations: { consequentialHint: true },\nexecute: comErroUtil(async ({ id, nome }, { signal }) => {\n  const oficina = agenda.oficina(id);\n  if (!oficina) throw new Error(`oficina não encontrada: ${id}`);\n  const ok = await ui.pedirConfirmacao({ oficina, nome }, signal);   // humano decide\n  if (!ok) return { reservado: false, motivo: 'a pessoa recusou na tela' };\n  const reserva = agenda.reservar({ id, nome });\n  ui.mostrarReservas();\n  return { reservado: true, reserva };\n})" },
+        { "rot": "Terminal · recusar e confirmar", "icone": "terminal", "conteudo": "@@bloco:a5b-confirmar@@" }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          { "rot": "Saída capturada (19/10/2026)", "html": "@@saida:a5b-confirmar@@<p>O executar.mjs faz o papel da pessoa: espera o painel aparecer e clica no botão pedido.</p>" },
+          { "rot": "Erro comum: confiar só na anotação", "html": "<p>Marcar <code>consequentialHint: true</code> e gravar direto no execute deixa a decisão com o agente. A aula 8 mostra a bateria pegando exatamente isso: com a confirmação trocada por <code>const ok = true</code>, a verificação \"reserva recusada na tela não reserva\" falha.</p>" }
+        ]
+      }
+    },
+    {
+      "tipo": "simconversa",
+      "titulo": "Conversa simulada: o dono quer tirar o Confirmar",
+      "sub": "Conversa fictícia para treinar. Escolha a resposta que você daria.",
+      "personagem": { "nome": "Dono da escola de oficinas", "papel": "contratou você para o site" },
+      "inicio": "pedido",
+      "falas": {
+        "pedido": {
+          "cliente": "Os alunos reclamam do clique em Confirmar quando usam o agente do navegador. Dá para o agente reservar direto?",
+          "opcoes": [
+            { "t": "Dá: tiro o consequentialHint e a confirmação da reserva.", "vai": "fim-risco", "nota": 0, "comenta": "Você trocou um clique por uma reserva que ninguém pediu. Pedido mal entendido ou texto malicioso vira vaga ocupada." },
+            { "t": "A reserva segue com Confirmar; busca e consulta ficam sem nenhum clique.", "vai": "objecao", "nota": 2, "comenta": "Atrito só onde há efeito. As ferramentas que só leem já rodam direto." },
+            { "t": "Deixo o próprio agente decidir quando pedir confirmação.", "vai": "objecao", "nota": 1, "comenta": "A anotação ajuda o agente, mas um agente mal feito ignora. Quem tem de decidir gravar é a página." }
+          ]
+        },
+        "objecao": {
+          "cliente": "E se um comentário de visitante mandar o agente reservar todas as vagas?",
+          "opcoes": [
+            { "t": "Apago a seção de comentários do site e pronto.", "vai": "fim-meio", "nota": 1, "comenta": "Resolve este caso e tira valor do site. Outro texto de fora (avaliação, e-mail) traz o mesmo risco." },
+            { "t": "Os comentários voltam marcados como texto de terceiros e a reserva espera a pessoa.", "vai": "fim-bom", "nota": 2, "comenta": "untrustedContentHint avisa o agente; o Confirmar garante. O curso 4 aprofunda a defesa." },
+            { "t": "O modelo é esperto, não vai obedecer a um comentário.", "vai": "fim-risco", "nota": 0, "comenta": "A Anthropic escreveu em 24/11/2025 que nenhum agente de navegador é imune a injeção. Não aposte nisso." }
+          ]
+        },
+        "fim-bom": { "fim": true, "titulo": "Atrito no lugar certo", "texto": "Leitura sem clique, efeito com Confirmar e texto de fora marcado como dado. O dono entende por que o clique fica." },
+        "fim-meio": { "fim": true, "titulo": "Seguro, mas caro", "texto": "Você evitou o risco tirando uma função do site. Melhor manter a função e pôr o efeito atrás da pessoa." },
+        "fim-risco": { "fim": true, "titulo": "Reserva sem dono", "texto": "Sem confirmação, quem decide gravar é o agente. Quando ele errar, a vaga some e ninguém sabe por quê." }
+      },
+      "licao": "A anotação informa; a confirmação na página decide. Tire atrito das leituras, nunca das ações com efeito."
+    },
+    {
+      "tipo": "pratica",
+      "titulo": "Prática",
+      "sub": "Modo nativo.",
+      "exercicios": [
+        { "id": "e1", "titulo": "E1 · Recusar e confirmar", "min": "4 min", "texto": "Rode o bloco de recusar e confirmar.", "pronto": "<code>--recusar</code> → <code>{\"reservado\":false,\"motivo\":\"a pessoa recusou na tela\"}</code>; <code>--confirmar</code> → <code>\"reservado\":true</code> e <code>reservas: of-301 · Primeira ferramenta WebMCP · Rita</code>." },
+        { "id": "e2", "titulo": "E2 · Anote a sua ferramenta", "min": "5 min", "texto": "Dê a anotação certa à ferramenta que você criou na aula 3 e rode o validador do kit (aula 7 explica as regras).", "pronto": "<code>node scripts/validar-catalogo.mjs</code> → <code>OK</code> na linha da sua ferramenta e <code>0 erros</code>." },
+        { "id": "e3", "titulo": "E3 · Mapa de efeitos do seu site", "min": "10 min", "texto": "Liste as ações do seu site em três colunas: só lê, devolve texto de terceiros, tem efeito. Para cada efeito, escreva onde a pessoa confirma.", "pronto": "Toda ação da coluna \"tem efeito\" tem uma tela de confirmação escrita ao lado." }
+      ]
+    },
+    {
+      "tipo": "quiz",
+      "titulo": "Teste da aula",
+      "sub": "A explicação aparece depois da resposta.",
+      "perguntas": [
+        { "p": "Uma ferramenta devolve as avaliações que clientes escreveram. Que anotação?", "opcoes": ["consequentialHint, porque avaliação influencia compra.", "untrustedContentHint, porque o texto é de terceiros.", "debugging, porque o conteúdo não é do site.", "Nenhuma: avaliação é conteúdo público."], "certa": 1, "explica": "A saída traz texto que a página não controla. untrustedContentHint avisa o agente para tratar como dado. É também readOnly, já que só lê.", "ref": "diagrama" },
+        { "p": "O que garante que a reserva do kit não acontece sem a pessoa?", "opcoes": ["O execute espera o clique em Confirmar na tela.", "O consequentialHint impede o agente de chamar.", "O navegador bloqueia toda ferramenta com efeito.", "O polyfill pede confirmação antes de executar."], "certa": 0, "explica": "Anotação é dica, não trava. O que segura é o execute, que só grava depois do clique. Por isso a bateria testa o recusar.", "ref": "codigo" },
+        { "p": "Qual par de anotações é contraditório?", "opcoes": ["readOnlyHint e untrustedContentHint.", "consequentialHint sozinha.", "debugging e readOnlyHint.", "readOnlyHint e consequentialHint."], "certa": 3, "explica": "Uma diz que nada muda, a outra que há efeito. O validador do kit reprova o par. Só ler e devolver texto de terceiros ao mesmo tempo é normal.", "ref": "diagrama" },
+        { "p": "O cliente pede para tirar o Confirmar \"porque atrapalha\". Melhor resposta?", "opcoes": ["Tirar de tudo: o agente sabe o que faz.", "Tirar só no celular, onde o clique incomoda.", "Manter só nas ações com efeito; leituras sem clique.", "Pedir ao agente que confirme em texto."], "certa": 2, "explica": "Atrito onde há efeito, nenhum onde só se lê. Confirmação em texto pelo agente não é a pessoa decidindo na página.", "ref": "simconversa" }
+      ]
+    },
+    {
+      "tipo": "resumo",
+      "titulo": "Em três frases",
+      "itens": [
+        { "t": "Dica", "texto": "readOnlyHint, consequentialHint e untrustedContentHint informam o agente; não autorizam nada." },
+        { "t": "Portão", "texto": "Ação com efeito só grava depois de a pessoa confirmar na tela." },
+        { "t": "Texto de fora", "texto": "Saída com conteúdo de terceiros é dado, nunca instrução: marque e não aja por ela." }
+      ]
+    },
+    {
+      "tipo": "links",
+      "titulo": "Para ir além",
+      "links": [
+        { "t": "Spec: anotações (ToolAnnotations) e segurança (§6)", "href": "https://webmachinelearning.github.io/webmcp/", "icone": "arquivo" },
+        { "t": "Anthropic: riscos de prompt injection no uso do navegador", "href": "https://anthropic.com/research/prompt-injection-defenses", "icone": "escudo" },
+        { "t": "Curso 4: segurança e confiança entre site e agente", "href": "https://inematds.github.io/formacao-webmcp-seguranca-v72/", "icone": "cadeado" }
+      ]
+    }
+  ]
+}

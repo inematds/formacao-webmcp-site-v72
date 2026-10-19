@@ -1,0 +1,8 @@
+== Chromium 156.0.8078.4 (Playwright) · modo: nativo
+navigator.modelContext (nome antigo): undefined
+entrada em texto JSON em vez de objeto: TypeError
+execute que lança: UnknownError: Tool was executed but the invocation failed. For example, the script function threw an error
+== Chromium 156.0.8078.4 (Playwright) · modo: polyfill
+navigator.modelContext (nome antigo): undefined
+entrada em texto JSON em vez de objeto: TypeError
+execute que lança: UnknownError: Tool execution failed

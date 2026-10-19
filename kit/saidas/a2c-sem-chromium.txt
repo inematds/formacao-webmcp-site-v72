@@ -1,0 +1,2 @@
+browserType.launch: Executable doesn't exist at /tmp/sem-navegador/chromium_headless_shell-1248/chrome-headless-shell-linux-arm64/chrome-headless-shell
+saída: 1

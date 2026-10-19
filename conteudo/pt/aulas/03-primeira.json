@@ -1,0 +1,110 @@
+{
+  "slug": "primeira",
+  "num": 3,
+  "menu": "Primeira",
+  "titulo": "Primeira ferramenta: registerTool com inputSchema e execute",
+  "titulo_curto": "Primeira ferramenta",
+  "minutos": 18,
+  "lead": "Uma ferramenta WebMCP é um objeto com nome, descrição, esquema de entrada e uma função execute. A página registra; o agente lista com getTools e chama com executeTool. Nesta aula você lê a ferramenta de busca do kit, chama do jeito que um agente chamaria e registra a sua primeira.",
+  "objetivo": "registrar uma ferramenta com nome, descrição, inputSchema e execute, e chamá-la como um agente chamaria, vendo o resultado e a tela.",
+  "competencias": ["escrever-definicao-de-ferramenta", "chamar-com-executeTool", "ler-resultado-em-json"],
+  "aprende": [
+    { "icone": "arquivo", "t": "Os campos de uma ferramenta e as regras de nome e descrição" },
+    { "icone": "lista", "t": "inputSchema em JSON Schema, fechado e descrito" },
+    { "icone": "play", "t": "executeTool: entra objeto, volta texto JSON" },
+    { "icone": "caneta", "t": "A sua primeira ferramenta no extras.mjs" }
+  ],
+  "hero_alt": "Mão encaixando um conector metálico numa régua de portas vazia, com um monitor desfocado ao fundo.",
+  "secoes": [
+    {
+      "tipo": "diagrama",
+      "titulo": "Da definição ao resultado",
+      "sub": "Clique em cada passo.",
+      "nos": [
+        { "icone": "arquivo", "titulo": "Definição", "sub": "objeto JS", "detalhe": "name (1 a 128 caracteres: letras e números ASCII, _ - .), title opcional, description não vazia, inputSchema (JSON Schema), execute(input, { signal }) e annotations opcionais." },
+        { "icone": "carregar", "titulo": "registerTool", "sub": "a página", "detalhe": "document.modelContext.registerTool(definição, { signal }) devolve uma Promise sem valor. Rejeita com InvalidStateError se o nome repete, se foge da regra ou se a descrição está vazia." },
+        { "icone": "lupa", "titulo": "getTools", "sub": "o agente", "detalhe": "Devolve as ferramentas registradas com name, title, description, inputSchema, annotations, origin e window. Imprima só o que precisa: window não vira JSON." },
+        { "icone": "play", "titulo": "executeTool", "sub": "a chamada", "forte": true, "detalhe": "executeTool(ferramenta, objeto, { signal }). O navegador roda o seu execute com o objeto e devolve o resultado como TEXTO JSON (Promise de string). Quem chama faz JSON.parse." },
+        { "icone": "check", "titulo": "Tela", "sub": "a pessoa vê", "detalhe": "No kit, a busca do agente atualiza a mesma lista que a pessoa vê. Agente e pessoa enxergam o mesmo estado." }
+      ],
+      "legenda": "Spec de 16/10/2026 e Chromium 156.0.8078.4. Se mudar, a aula 1 avisa: confira a data antes."
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "A ferramenta de busca do kit",
+      "sub": "Trecho de kit/pagina/ferramentas.mjs. A mesma agenda.buscar atende o formulário e a ferramenta.",
+      "blocos": [
+        { "rot": "Trecho · kit/pagina/ferramentas.mjs", "icone": "arquivo", "conteudo": "{\n  name: 'buscar_oficinas',\n  title: 'Buscar oficinas',\n  description: 'Lista as oficinas da agenda por tema. Só lê: não reserva nada. Use apenasComVaga=true para ver só as que ainda têm vaga.',\n  inputSchema: {\n    type: 'object',\n    properties: {\n      tema: { type: 'string', enum: TEMAS, description: 'Tema da oficina.' },\n      apenasComVaga: { type: 'boolean', description: 'true = só oficinas com vaga.' }\n    },\n    additionalProperties: false\n  },\n  annotations: { readOnlyHint: true },\n  execute: comErroUtil(async input => {\n    const lista = agenda.buscar(input);\n    ui.mostrarResultados(lista, input);   // a pessoa vê o mesmo que o agente recebeu\n    return { total: lista.length, oficinas: lista };\n  })\n}" },
+        { "rot": "Trecho · registrar com detecção (ferramentas.mjs)", "icone": "arquivo", "conteudo": "const mc = document.modelContext;   // nome atual (16/10/2026)\nif (!mc || typeof mc.registerTool !== 'function') {\n  aviso?.('Este navegador não expõe WebMCP. Tudo funciona pelo formulário.');\n  return { modo: 'sem', registradas: 0 };\n}\nconst pagina = new AbortController();\naddEventListener('pagehide', () => pagina.abort(), { once: true });\nawait registrar(mc, defs, pagina.signal);" }
+      ]
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "Chamar como um agente chamaria",
+      "sub": "listar.mjs faz getTools; executar.mjs faz executeTool com o objeto que você passa e mostra a tela depois.",
+      "blocos": [
+        { "rot": "Terminal · listar e executar", "icone": "terminal", "conteudo": "@@bloco:a3a-executar@@" }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          { "rot": "Saída capturada (19/10/2026)", "html": "@@saida:a3a-executar@@<p>\"resultado (string)\": o navegador devolve texto JSON, como a spec manda. A lista da tela também ficou com 1 oficina.</p>" },
+          { "rot": "Erro comum: texto na entrada, throw no execute", "html": "@@saida:a3c-erros@@<p>Exemplos antigos passavam <code>JSON.stringify(input)</code> para contornar uma implementação de setembro: hoje dá TypeError nos dois. E o motivo de um <code>throw</code> não chega ao agente (UnknownError genérico). Por isso o kit devolve <code>{ erro }</code> como dado (aula 7).</p>" }
+        ]
+      }
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "A sua primeira ferramenta",
+      "sub": "O bloco copia a página para um ensaio, escreve um extras.mjs com contar_vagas e confere. Para valer no kit, cole a mesma lista em kit/pagina/extras.mjs.",
+      "blocos": [
+        { "rot": "Terminal · ensaio com contar_vagas", "icone": "caneta", "conteudo": "@@bloco:a3b-sua-ferramenta@@" }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          { "rot": "Saída capturada (19/10/2026)", "html": "@@saida:a3b-sua-ferramenta@@<p>Antes do extras.mjs, a contagem era 4. A soma de HTML: 3 vagas em of-101 e 0 em of-102.</p>" }
+        ]
+      }
+    },
+    {
+      "tipo": "pratica",
+      "titulo": "Prática",
+      "sub": "Modo nativo; troque por polyfill se quiser comparar.",
+      "exercicios": [
+        { "id": "e1", "titulo": "E1 · Chamar a busca", "min": "5 min", "texto": "Rode listar e executar. Troque o tema para html e depois para cobol e compare.", "pronto": "<code>node scripts/executar.mjs nativo buscar_oficinas '{\"tema\":\"webmcp\",\"apenasComVaga\":true}'</code> → <code>resultado (string): {\"total\":1,</code> e <code>saída: 0</code>; com cobol → <code>{\"erro\":\"tema inválido: cobol\"}</code>." },
+        { "id": "e2", "titulo": "E2 · contar_vagas no kit", "min": "10 min", "texto": "Cole a lista de contar_vagas em kit/pagina/extras.mjs (dentro do return [ ]).", "pronto": "<code>node scripts/listar.mjs nativo | tail -1</code> → <code>5 ferramentas registradas</code> (antes: 4)." },
+        { "id": "e3", "titulo": "E3 · Uma ferramenta sua", "min": "15 min", "texto": "Escreva outra ferramenta só de leitura no extras.mjs, por exemplo proxima_oficina (a de data mais próxima). Nome com _, descrição que diz o que não faz, schema fechado.", "pronto": "<code>node scripts/executar.mjs nativo [nome] '{}'</code> → <code>resultado (string):</code> com o JSON esperado e <code>saída: 0</code>." }
+      ]
+    },
+    {
+      "tipo": "quiz",
+      "titulo": "Teste da aula",
+      "sub": "A explicação aparece depois da resposta.",
+      "perguntas": [
+        { "p": "O que executeTool devolve na spec de 16/10/2026?", "opcoes": ["Uma Promise de texto JSON com o resultado.", "O objeto que o execute devolveu, sem mudança.", "Uma Promise vazia; o resultado vai para um evento.", "Um RegisteredTool atualizado com o resultado."], "certa": 0, "explica": "executeTool devolve Promise<DOMString>: o navegador serializa o retorno do execute em JSON. Quem chama faz JSON.parse, como o testar.mjs.", "ref": "codigo" },
+        { "p": "Qual nome de ferramenta registerTool recusa?", "opcoes": ["buscar_oficinas", "oficinas.buscar", "buscar oficinas", "buscar-oficinas-v2"], "certa": 2, "explica": "O nome aceita de 1 a 128 caracteres: letras e números ASCII, _ - e ponto. Espaço não entra, e o registro rejeita com InvalidStateError.", "ref": "diagrama" },
+        { "p": "Por que a busca do kit chama ui.mostrarResultados dentro do execute?", "opcoes": ["Porque o navegador exige mexer no DOM.", "Para a pessoa ver o mesmo estado que o agente recebeu.", "Para o agente ler a tela em vez do JSON.", "Porque getTools só lista ferramentas visuais."], "certa": 1, "explica": "Agente e pessoa trabalham na mesma página. Se o agente busca e a tela não muda, a pessoa perde o fio. A spec não obriga; é decisão de desenho do kit.", "ref": "codigo" },
+        { "p": "Um tutorial manda chamar executeTool(t, JSON.stringify(entrada)). O que acontece no Chromium 156?", "opcoes": ["Funciona: o navegador aceita texto e objeto.", "Funciona só no polyfill, não no nativo.", "Funciona, mas o resultado volta como objeto.", "Dá TypeError: a entrada tem de ser objeto."], "certa": 3, "explica": "A entrada é object na spec. O contorno com texto era de uma implementação de setembro e hoje dá TypeError no nativo e no polyfill (medido em 19/10/2026).", "ref": "codigo" }
+      ]
+    },
+    {
+      "tipo": "resumo",
+      "titulo": "Em três frases",
+      "itens": [
+        { "t": "Definição", "texto": "name com regra, description clara, inputSchema fechado e execute que devolve um objeto." },
+        { "t": "Chamada", "texto": "getTools lista; executeTool recebe objeto e devolve texto JSON." },
+        { "t": "Na tela", "texto": "O execute usa a mesma regra do formulário e mostra à pessoa o que o agente recebeu." }
+      ]
+    },
+    {
+      "tipo": "links",
+      "titulo": "Para ir além",
+      "links": [
+        { "t": "Spec: interface ModelContext e ModelContextTool", "href": "https://webmachinelearning.github.io/webmcp/", "icone": "arquivo" },
+        { "t": "README do WebMCP (exemplos e tipos)", "href": "https://github.com/webmachinelearning/webmcp", "icone": "git" },
+        { "t": "Curso 1: servidor MCP (o mesmo desenho de ferramenta, no servidor)", "href": "https://inematds.github.io/formacao-webmcp-mcp-v72/", "icone": "camadas" }
+      ]
+    }
+  ]
+}

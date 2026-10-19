@@ -1,0 +1,4 @@
+Draft Community Group Report, 16 October 2026
+document.modelContext: 16 linhas
+navigator.modelContext: 0 linhas
+unregisterTool: 0 linhas
